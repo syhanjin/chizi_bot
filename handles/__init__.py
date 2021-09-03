@@ -48,11 +48,7 @@ class User:
             return False
         sender = msg['sender']
         if sender.get('card'):
-            self.card = sender.get('card')
-        elif sender.get('nickname'):
-            self.card = sender.get('nickname')
-        else:
-            self.card = '用户名未识别'
+            self.card = sender.get('card') or sender.get('nickname') or self.card = '用户名未识别'
         self.age = sender.get('age')
         self.sex = sender.get('sex')
         self.area = sender.get('area')
@@ -69,9 +65,8 @@ class User:
         sender = getattr(event, 'sender', None)
         if sender == None:
             return False
-        self.card = getattr(sender, 'card', None)
-        if not self.card:
-            self.card = getattr(sender, 'nickname', '用户名未识别')
+        self.card = getattr(sender, 'card', None) or getattr(
+            sender, 'nickname', '用户名未识别')
         self.age = getattr(sender, 'age', None)
         self.sex = getattr(sender, 'sex', None)
         self.area = getattr(sender, 'area', None)
@@ -102,4 +97,3 @@ class User:
         self.favor = round(self.favor + favor, 2)
         if self.favor > self.fav_max:
             self.favorLvl += 1
-
