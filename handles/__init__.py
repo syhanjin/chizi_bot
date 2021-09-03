@@ -1,3 +1,4 @@
+from asyncio import run
 import pymongo
 
 client = pymongo.MongoClient('127.0.0.1', 27017)
@@ -10,11 +11,11 @@ def make_query(group_id: str, user_id: str): return {
 
 
 class User:
-    async def __init__(self, group_id: str, user_id: str):
+    def __init__(self, group_id: str, user_id: str):
         self.group_id = group_id
         self.user_id = user_id
         data = db.user.find_one(make_query(group_id, user_id))
-        await self.create(data)
+        run(self.create(data))
         admin = db.admin.find_one({
             '$or': [
                 make_query(group_id, user_id),
