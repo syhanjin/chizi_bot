@@ -1,4 +1,5 @@
 import pymongo
+from nonebot.log import logger
 
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
@@ -39,11 +40,12 @@ class User:
         if data == None:
             data = {}
 
-        def _(k, v): return data[k] if(data.get(k)!=None) else v
+        def _(k, v): return data[k] if(k in data) else v
         self.favor = _('favor', 0)
         self.favorLvl = _('favorLvl', 0)
         self.coin = _('coin', 0)
         self.sy = _('sy', None)
+        logger.debug(f"[%(asctime)s %(name)s] %(levelname)s: %({self.favorLvl})s")
         pass
 
     def update_from_msg(self, msg):
