@@ -1,3 +1,4 @@
+from nonebot.adapters.cqhttp.event import GroupMessageEvent
 import pymongo
 import datetime
 from handles import User, make_query
@@ -251,15 +252,15 @@ async def putText(draw, x, y, text: 'str | tuple', font='微软雅黑', fontsize
 
 
 @checkin.handle()
-async def _(bot: Bot, event: MessageEvent):
+async def _(bot: Bot, event: GroupMessageEvent):
     msg = json.loads(event.json())
-    group_id = str(msg['group_id'])
-    user_id = str(msg['user_id'])
+    group_id = str(event.group_id)
+    user_id = str(event.user_id)
     c = Checkin(group_id, user_id)
-    c.update_from_msg(msg)
+    c.update_from_event(event)
     if not c.checkin():
-        await bot.send(event, ms.at(user_id) + ms.text('你今天已经签过到了，明天再来吧~~'))
+        await bot.send(event, '你今天已经签过到了，明天再来吧~~', at_sender=True)
         return
     src = await c.generate_card()
     await c.save()
-    await bot.send(event, ms.at(user_id) + ms.image('file://'+src))
+    await bot.send(event, ms.image('file://'+src), at_sender=True)
