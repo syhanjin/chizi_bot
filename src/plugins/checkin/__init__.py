@@ -1,4 +1,5 @@
 import datetime
+from handles import User
 import os
 import random
 
@@ -22,6 +23,23 @@ userdb = client['user']
 NAME = list(nonebot.get_driver().config.nickname)[0]
 root_path = os.path.join('.', 'res', 'sign')
 card_ratio = 16 / 9
+
+
+# -- 签到类 --
+class Checkin(User):
+    def __init__(self, group_id, user_id):
+        super().__init__(group_id, user_id)
+        data = db.checkin.find_one({'group_id':group_id, 'user_id': user_id})
+        self.create(data)
+    
+    def create(self, data):
+        if data == None:
+            data = {}
+        def _(k, v): return data[k] if(k in data) else v
+        self.last = _('last', None)
+        self.coin = _('coin', 0)
+
+# -- ------ --
 
 async def rand(st, ed): return random.random()*(ed-st) + st
 
@@ -59,9 +77,11 @@ async def create_data(msg):
 
 @checkin.handle()
 async def _(bot: Bot, event: Event, state: T_State):
-    await checkin.send(
-        'session_id=' + str(event.get_session_id()) + '\n'
-        +'user_id=' + str(event.get_user_id()) + '\n'
-        +'event_name=' + str(event.get_event_name())
-    ) 
-    # data = db.user.find_one({'group_id': event.grou})
+    # if event.get_event_name() != 'message.group.normal':
+    #     return
+    # group_id = event.get_session_id().split('_')[1]
+    # user_id = event.get_user_id()
+    # user = User(group_id, user_id)
+    checkin.send(event.get_message())
+
+
