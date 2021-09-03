@@ -25,5 +25,5 @@ async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
         msg = '欢迎新成员，请先看群公告~~~'
     else:
         msg = data['msg']
-    await bot.send(event,f"[CQ:at,qq={event.user_id}] {msg}", auto_escape=True)
+    await bot.send(event,f"{msg}", at_sender=True)
     return
