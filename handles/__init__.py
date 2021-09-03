@@ -1,5 +1,4 @@
 import pymongo
-from nonebot.log import logger
 
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
@@ -11,11 +10,11 @@ def make_query(group_id: str, user_id: str): return {
 
 
 class User:
-    def __init__(self, group_id: str, user_id: str):
+    async def __init__(self, group_id: str, user_id: str):
         self.group_id = group_id
         self.user_id = user_id
         data = db.user.find_one(make_query(group_id, user_id))
-        self.create(data)
+        await self.create(data)
         admin = db.admin.find_one({
             '$or': [
                 make_query(group_id, user_id),
@@ -36,19 +35,17 @@ class User:
             admin = 0
         pass
 
-    def create(self, data):
+    async def create(self, data):
         if data == None:
             data = {}
-
-        def _(k, v): return data[k] if(k in data) else v
-        self.favor = _('favor', 0)
-        self.favorLvl = _('favorLvl', 0)
-        self.coin = _('coin', 0)
-        self.sy = _('sy', None)
-        logger.debug(f"[%(asctime)s %(name)s] %(levelname)s: %({self.favorLvl})s")
+        async def _(k, v): return data[k] if(k in data) else v
+        self.favor = await _('favor', 0)
+        self.favorLvl = await _('favorLvl', 0)
+        self.coin = await _('coin', 0)
+        self.sy = await _('sy', None)
         pass
 
-    def update_from_msg(self, msg):
+    async def update_from_msg(self, msg):
         if msg == None or 'sender' not in msg:
             return False
         sender = msg['sender']
@@ -81,7 +78,7 @@ class User:
             {'upsert': True}
         )
     
-    def add_favor(self, favor):
+    async def add_favor(self, favor):
         self.favor += favor
         if self.favor > self.fav_max:
             self.favorLvl += 1
