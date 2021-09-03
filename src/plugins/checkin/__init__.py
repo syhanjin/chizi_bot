@@ -5,12 +5,12 @@ import random
 
 import nonebot
 from nonebot import on_command
-from nonebot.adapters import Bot, Event
-from nonebot.typing import T_State
+from nonebot.adapters.cqhttp import Bot, MessageEvent
+from nonebot.adapters.cqhttp.permission import GROUP
 from PIL import Image, ImageDraw, ImageFont
 # from utils.message_builder import image
 
-checkin = on_command("签到", priority=5)
+checkin = on_command("签到", priority=5, permission=GROUP)
 
 # -- 数据库 --
 import pymongo
@@ -76,12 +76,9 @@ async def create_data(msg):
     return data
 
 @checkin.handle()
-async def _(bot: Bot, event: Event, state: T_State):
-    # if event.get_event_name() != 'message.group.normal':
-    #     return
-    # group_id = event.get_session_id().split('_')[1]
-    # user_id = event.get_user_id()
+async def _(bot: Bot, event: MessageEvent):
+    group_id = event.json
     # user = User(group_id, user_id)
-    await checkin.send(event.get_message())
+    await checkin.send(str(event.json()))
 
 
