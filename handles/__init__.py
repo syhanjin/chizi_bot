@@ -79,3 +79,4 @@ class User:
         self.favor = round(self.favor + favor, 2)
         if self.favor > self.fav_max:
             self.favorLvl += 1
+

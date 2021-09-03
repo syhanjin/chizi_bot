@@ -1,5 +1,7 @@
 
 import datetime
+
+from nonebot.adapters.cqhttp.event import GroupMessageEvent
 from handles import User
 import json
 from nonebot import on_message
@@ -65,3 +67,9 @@ async def flood(bot: Bot, event: MessageEvent, this: Msg, user: User):
         for i in list(f4):
             await bot.call_api('delete_msg', message_id=i['id'])
         await bot.call_api('delete_msg', message_id=this.id)
+
+
+# async def keyword_delete(bot: Bot, event: MessageEvent, user: User):
+#     if not isinstance(event, GroupMessageEvent) or user.admin > 0:
+#         return
+    

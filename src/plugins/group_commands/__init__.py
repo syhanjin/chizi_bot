@@ -13,7 +13,7 @@ set_ban = on_command(
     "禁言", priority=2, permission=GROUP_ADMIN | GROUP_OWNER | SUPERUSER
 )
 cancel_ban = on_command(
-    "解禁", aliases={'解除禁言'}, priority=2, permission=GROUP_ADMIN | GROUP_OWNER | SUPERUSER
+    "解禁", aliases={'解除禁言'}, priority=2, permission=GROUP_ADMIN | GROUP_OWNER | SUPERUSER, block=True
 )
 
 

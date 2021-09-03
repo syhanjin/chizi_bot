@@ -13,7 +13,7 @@ from nonebot.adapters.cqhttp.permission import GROUP
 from PIL import Image, ImageDraw, ImageFont
 # from utils.message_builder import image
 
-checkin = on_command("签到", priority=5, permission=GROUP)
+checkin = on_command("签到", priority=5, permission=GROUP, block=True)
 
 # -- 数据库 --
 
