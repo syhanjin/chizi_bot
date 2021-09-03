@@ -51,13 +51,15 @@ async def handle_first_receive(bot: Bot, event: MessageEvent, state: T_State):
         await bot.send(event, ms.text('格式错误, 标准格式：解禁 <@某人>'))
     qq = r.match(args).group(1)
     if qq == 'all':
-        await bot.call_api('set_group_whole_ban', {
-            'group_id': json.loads(event.json())['group_id'],
-            'enable': False
-        })
+        await bot.call_api(
+            'set_group_whole_ban',
+            group_id=json.loads(event.json())['group_id'],
+            enable=False
+        )
         return
-    await bot.call_api('set_group_ban', {
-        'user_id': int(qq),
-        'group_id': json.loads(event.json())['group_id'],
-        'duration': 0
-    })
+    await bot.call_api(
+        'set_group_ban',
+        user_id=int(qq),
+        group_id=json.loads(event.json())['group_id'],
+        duration=0
+    )
