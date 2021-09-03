@@ -6,7 +6,6 @@ import json
 import random
 
 import nonebot
-from asyncio import run
 from nonebot import on_command
 from nonebot.adapters.cqhttp import Bot, MessageEvent
 from nonebot.adapters.cqhttp.message import MessageSegment
@@ -30,10 +29,10 @@ card_ratio = 16 / 9
 
 # -- 签到类 --
 class Checkin(User):
-    def __init__(self, group_id: str, user_id: str):
-        super().__init__(group_id, user_id)
+    async def __init__(self, group_id: str, user_id: str):
+        await super().__init__(group_id, user_id)
         data = db.checkin.find_one(make_query(group_id, user_id))
-        run(self.create(data))
+        await self.create(data)
         return None
 
     async def create(self, data):
@@ -240,7 +239,7 @@ async def _(bot: Bot, event: MessageEvent):
     msg = json.loads(event.json())
     group_id = str(msg['group_id'])
     user_id = str(msg['user_id'])
-    c = Checkin(group_id, user_id)
+    c = await Checkin(group_id, user_id)
     c.update_from_msg(msg)
     await c.checkin()
     src = await c.generate_card()
