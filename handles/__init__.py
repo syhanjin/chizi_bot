@@ -72,10 +72,10 @@ class User:
                     'coin': self.coin,
                     'sy': self.sy,
                 }
-            },True
+            }, True
         )
 
     def add_favor(self, favor):
-        self.favor += favor
+        self.favor = round(self.favor + favor, 2)
         if self.favor > self.fav_max:
             self.favorLvl += 1

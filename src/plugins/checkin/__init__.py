@@ -8,7 +8,7 @@ import random
 import nonebot
 from nonebot import on_command
 from nonebot.adapters.cqhttp import Bot, MessageEvent
-from nonebot.adapters.cqhttp.message import MessageSegment
+from nonebot.adapters.cqhttp.message import MessageSegment as ms
 from nonebot.adapters.cqhttp.permission import GROUP
 from PIL import Image, ImageDraw, ImageFont
 # from utils.message_builder import image
@@ -43,10 +43,28 @@ class Checkin(User):
     def checkin(self):
         # 信息变更
         self.now = datetime.datetime.now()
+        if self.last:
+            if (
+                self.now
+                - datetime.timedelta(
+                    hours=self.now.hour,
+                    minutes=self.now.minute,
+                    seconds=self.now.second,
+                    microseconds=self.now.microsecond
+                )
+            ) == (
+                    self.last
+                    - datetime.timedelta(
+                        hours=self.last.hour,
+                        minutes=self.last.minute,
+                        seconds=self.last.second,
+                        microseconds=self.last.microsecond
+                    )
+            ):
+                return False
         # 今天凌晨
         zeroToday = self.now - datetime.timedelta(hours=self.now.hour, minutes=self.now.minute,
                                                   seconds=self.now.second, microseconds=self.now.microsecond)
-
         if self.last and self.last + datetime.timedelta(hours=24) >= zeroToday:
             self.continuity += 1
         else:
@@ -58,6 +76,7 @@ class Checkin(User):
         self.coin += self.today_coin
         if self.admin == 5:
             self.label = '主仆'
+        return True
 
     async def generate_card(self):
         # 生成图片
@@ -238,7 +257,9 @@ async def _(bot: Bot, event: MessageEvent):
     user_id = str(msg['user_id'])
     c = Checkin(group_id, user_id)
     c.update_from_msg(msg)
-    c.checkin()
+    if not c.checkin():
+        bot.send(event, ms.at(user_id) + ms.text('你今天已经签过到了，明天再来吧~~'))
+        return
     src = await c.generate_card()
     await c.save()
-    await bot.send(event, MessageSegment.image('file://'+src))
+    await bot.send(event, ms.at(user_id) + ms.image('file://'+src))
