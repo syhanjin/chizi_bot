@@ -240,5 +240,5 @@ async def _(bot: Bot, event: MessageEvent):
     c.checkin()
     src = await c.generate_card()
     await c.save()
-    await checkin.send('[CQ:at,qq='+user_id+'][CQ:image,file=file//'+ src +']')
+    await bot.send(event,MessageSegment.image(src))
 
