@@ -34,8 +34,9 @@ class Checkin(User):
         data = db.checkin.find_one(make_query(group_id, user_id))
         if data == None:
             data = {}
+
         def _(k, v): return data[k] if(k in data) else v
-        self.last =  _('last', None)
+        self.last = _('last', None)
         self.continuity = _('continuity', 0)
         return None
 
@@ -76,9 +77,9 @@ class Checkin(User):
         # region 输出用户名 && QQ && sakuyark
         y = 10
         y += (await putText(draw, 40, y, self.card, font=fontpath,
-                     fill=(255, 255, 255), fontsize=128, border=1.5))[1]
+                            fill=(255, 255, 255), fontsize=128, border=1.5))[1]
         y += (await putText(draw, 40, y, ('QQ:', self.user_id), font=fontpath,
-                     fill=(255, 255, 255), fontsize=96, border=1.5))[1]
+                            fill=(255, 255, 255), fontsize=96, border=1.5))[1]
         if self.user:
             await putText(draw, 40, y, ('Sakuyark:', self.user), font=fontpath, fill=(
                 255, 255, 255), fontsize=96, border=1.5)
@@ -86,7 +87,7 @@ class Checkin(User):
         # region 输出连签
         x = 40
         x += (await putText(draw, x, 430, u"Accumulative check-in for",
-                     font=fontpath, fontsize=60))[0]
+                            font=fontpath, fontsize=60))[0]
         x += 15
         x += (await putText(
             draw, x, 410, self.continuity,
@@ -95,7 +96,7 @@ class Checkin(User):
         ))[0]
         x += 15
         await putText(draw, x, 430, 'days',
-                font=fontpath, fontsize=60)
+                      font=fontpath, fontsize=60)
         # endregion
         # region 输出上次签到时间
         '''
@@ -119,7 +120,7 @@ class Checkin(User):
         x += 50
         y += 20
         y += (await putText(draw, x, y, ('当前好感度 :',
-                                  self.favor), font=fontpath, fontsize=48))[1]
+                                         self.favor), font=fontpath, fontsize=48))[1]
         y += 15
         dx, h = 15, 40
         draw.rectangle((x + dx, y, x + dx + 360, y + h), fill='#fff')
@@ -158,24 +159,24 @@ class Checkin(User):
         y += 15
         txy = await putText(draw, x, y, '好感度', font=fontpath, fontsize=60)
         await putText(draw, x + 350, y, ('+', self.today_favor),
-                font=fontpath, fontsize=60, fill=(128, 64, 64))
+                      font=fontpath, fontsize=60, fill=(128, 64, 64))
         y += txy[1]
         y += 15
         txy = await putText(draw, x, y, '金币', font=fontpath, fontsize=60)
         await putText(draw, x + 350, y, ('+', str(self.coin)),
-                font=fontpath, fontsize=60, fill=(128, 64, 64))
+                      font=fontpath, fontsize=60, fill=(128, 64, 64))
         y += txy[1] + 60
         y += (await putText(draw, x, y,
-                     ('金币总数:', self.today_favor), font=fontpath, fontsize=60))[1]
+                            ('金币总数:', self.today_favor), font=fontpath, fontsize=60))[1]
         # endregion
 
         # region 输出水印
         await putText(draw, 1750, 20, self.now.__format__('%m/%d'),
-                font=fontpath, fill=(255, 255, 255), fontsize=48,
-                border=1
-                )
+                      font=fontpath, fill=(255, 255, 255), fontsize=48,
+                      border=1
+                      )
         await putText(draw, 1600, 1020, 'Sakuyark@2021',
-                font=fontpath, fill=(128, 128, 128), fontsize=36)
+                      font=fontpath, fill=(128, 128, 128), fontsize=36)
         # endregion
 
         # region 合成并保存
@@ -197,7 +198,7 @@ class Checkin(User):
                     'last': self.last,
                     'continuity': self.continuity,
                 }
-            },True
+            }, True
         )
 
 # -- ------ --
@@ -240,5 +241,4 @@ async def _(bot: Bot, event: MessageEvent):
     c.checkin()
     src = await c.generate_card()
     await c.save()
-    await bot.send(event,MessageSegment.image(src))
-
+    await bot.send(event, MessageSegment.image('file://'+src))
