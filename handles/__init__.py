@@ -10,11 +10,11 @@ def make_query(group_id: str, user_id: str): return {
 
 
 class User:
-    async def __init__(self, group_id: str, user_id: str):
+    def __init__(self, group_id: str, user_id: str):
         self.group_id = group_id
         self.user_id = user_id
         data = db.user.find_one(make_query(group_id, user_id))
-        await self.create(data)
+        self.create(data)
         admin = db.admin.find_one({
             '$or': [
                 make_query(group_id, user_id),
@@ -35,17 +35,18 @@ class User:
             admin = 0
         return None
 
-    async def create(self, data):
+    def create(self, data):
         if data == None:
             data = {}
-        async def _(k, v): return data[k] if(k in data) else v
-        self.favor = await _('favor', 0)
-        self.favorLvl = await _('favorLvl', 0)
-        self.coin = await _('coin', 0)
-        self.sy = await _('sy', None)
+
+        def _(k, v): return data[k] if(k in data) else v
+        self.favor = _('favor', 0)
+        self.favorLvl = _('favorLvl', 0)
+        self.coin = _('coin', 0)
+        self.sy = _('sy', None)
         pass
 
-    async def update_from_msg(self, msg):
+    def update_from_msg(self, msg):
         if msg == None or 'sender' not in msg:
             return False
         sender = msg['sender']
@@ -77,8 +78,8 @@ class User:
             },
             {'upsert': True}
         )
-    
-    async def add_favor(self, favor):
+
+    def add_favor(self, favor):
         self.favor += favor
         if self.favor > self.fav_max:
             self.favorLvl += 1
