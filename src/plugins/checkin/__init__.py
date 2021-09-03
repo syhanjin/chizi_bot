@@ -258,7 +258,7 @@ async def _(bot: Bot, event: MessageEvent):
     c = Checkin(group_id, user_id)
     c.update_from_msg(msg)
     if not c.checkin():
-        bot.send(event, ms.at(user_id) + ms.text('你今天已经签过到了，明天再来吧~~'))
+        await bot.send(event, ms.at(user_id) + ms.text('你今天已经签过到了，明天再来吧~~'))
         return
     src = await c.generate_card()
     await c.save()
