@@ -4,7 +4,7 @@ import random
 
 import nonebot
 from nonebot import on_command
-from nonebot.adapters import Bot, MessageEvent
+from nonebot.adapters import Bot, Event
 from nonebot.typing import T_State
 from PIL import Image, ImageDraw, ImageFont
 from utils.message_builder import image
@@ -58,6 +58,6 @@ async def create_data(msg):
     return data
 
 @checkin.handle()
-async def _(bot: Bot, event: MessageEvent, state: T_State):
+async def _(bot: Bot, event: Event, state: T_State):
     await checkin.send(event.get_session_id())
     # data = db.user.find_one({'group_id': event.grou})
