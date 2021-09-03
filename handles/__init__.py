@@ -34,6 +34,7 @@ class User:
         self.attitude = fav['attitude']
         self.dfav = fav['fav']
         user = userdb.userdata.find_one({'qq': user_id})
+        self.user = None
         if user != None:
             self.user = user['user']
         if admin != None:

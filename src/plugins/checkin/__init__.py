@@ -85,14 +85,14 @@ class Checkin(User):
         # endregion
         # region 输出连签
         x = 40
-        x += await putText(draw, x, 430, u"Accumulative check-in for",
-                     font=fontpath, fontsize=60)[0]
+        x += (await putText(draw, x, 430, u"Accumulative check-in for",
+                     font=fontpath, fontsize=60))[0]
         x += 15
-        x += await putText(
+        x += (await putText(
             draw, x, 410, self.continuity,
             font=fontpath, fill='#ff00ff', fontsize=80,
             border=1, borderFill=(200, 0, 200)
-        )[0]
+        ))[0]
         x += 15
         await putText(draw, x, 430, 'days',
                 font=fontpath, fontsize=60)
@@ -118,8 +118,8 @@ class Checkin(User):
         # 内容
         x += 50
         y += 20
-        y += await putText(draw, x, y, ('当前好感度 :',
-                                  self.favor), font=fontpath, fontsize=48)[1]
+        y += (await putText(draw, x, y, ('当前好感度 :',
+                                  self.favor), font=fontpath, fontsize=48))[1]
         y += 15
         dx, h = 15, 40
         draw.rectangle((x + dx, y, x + dx + 360, y + h), fill='#fff')
@@ -128,32 +128,32 @@ class Checkin(User):
         draw.rectangle((x + dx, y, x + dx + w - 20, y + h), fill='#f0f')
         draw.ellipse((x + dx + w - 40, y, x + dx + w, y + h), fill='#f0f')
         y += h+15
-        y += await putText(
+        y += (await putText(
             draw, x, y,
             ('· 与', NAME, '的关系 :', self.label),
             font=fontpath, fontsize=36
-        )[1]
-        y += await putText(
+        ))[1]
+        y += (await putText(
             draw, x, y,
             ('· ', NAME, '对你的态度 :', self.attitude),
             font=fontpath, fontsize=36
-        )[1]
-        y += await putText(
+        ))[1]
+        y += (await putText(
             draw, x, y,
             ('· 关系提升还需要:', self.fav_max - self.favor, '好感度'),
             font=fontpath, fontsize=36
-        )[1]
+        ))[1]
         y += 15
-        y += await putText(
+        y += (await putText(
             draw, x, y,
             ('时间: ', self.now.__format__('%Y-%m-%d %a %H:%M')),
             font=fontpath, fontsize=48
-        )[1]
+        ))[1]
         # endregion
 
         # region 右侧 今日签到信息 全部信息
         x, y = 1150, 430
-        y += await putText(draw, x, y, '今日签到', font=fontpath, fontsize=72)[1]
+        y += (await putText(draw, x, y, '今日签到', font=fontpath, fontsize=72))[1]
         x += 50
         y += 15
         txy = await putText(draw, x, y, '好感度', font=fontpath, fontsize=60)
@@ -165,8 +165,8 @@ class Checkin(User):
         await putText(draw, x + 350, y, ('+', str(self.coin)),
                 font=fontpath, fontsize=60, fill=(128, 64, 64))
         y += txy[1] + 60
-        y += await putText(draw, x, y,
-                     ('金币总数:', self.today_favor), font=fontpath, fontsize=60)[1]
+        y += (await putText(draw, x, y,
+                     ('金币总数:', self.today_favor), font=fontpath, fontsize=60))[1]
         # endregion
 
         # region 输出水印
