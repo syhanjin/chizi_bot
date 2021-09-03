@@ -12,4 +12,4 @@ ban = on_command("禁言", priority=5, permission=GROUP_ADMIN | GROUP_OWNER | SU
 @ban.handle()
 async def handle_first_receive(bot: Bot, event: MessageEvent, state: T_State):
     args = str(event.get_message()).strip()
-    await bot.send(event, args)
+    await bot.send(event, ms.text(args))
