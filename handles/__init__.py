@@ -47,14 +47,35 @@ class User:
         if msg == None or 'sender' not in msg:
             return False
         sender = msg['sender']
-        self.card = sender['card'] if(
-            'card' in sender) else sender.get('nickname')
+        if sender.get('card'):
+            self.card = sender.get('card')
+        elif sender.get('nickname'):
+            self.card = sender.get('nickname')
+        else:
+            self.card = '用户名未识别'
         self.age = sender.get('age')
         self.sex = sender.get('sex')
         self.area = sender.get('area')
         self.level = sender.get('level')
         self.title = sender.get('title')
         self.role = sender.get('role')
+        if self.role == 'admin':
+            self.admin = 2
+        elif self.role == 'owner':
+            self.admin = 3
+        return True
+
+    def update_from_event(self, event):
+        sender = getattr(event, 'sender', None)
+        if sender == None:
+            return False
+        self.card = getattr(sender, 'card', getattr(sender, 'nickname', '用户名未识别'))
+        self.age = getattr(sender, 'age', None)
+        self.sex = getattr(sender, 'sex', None)
+        self.area = getattr(sender, 'area', None)
+        self.level = getattr(sender, 'level', None)
+        self.title = getattr(sender, 'title', None)
+        self.role = getattr(sender, 'role', None)
         if self.role == 'admin':
             self.admin = 2
         elif self.role == 'owner':
