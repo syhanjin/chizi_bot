@@ -23,22 +23,26 @@ async def handle_first_receive(bot: Bot, event: MessageEvent, state: T_State):
     r = re.compile("\[CQ:at,qq=(\d+)\] *(\d+)?")
     if not r.match(args):
         await bot.send(event, ms.text('格式错误, 标准格式：禁言 <@某人> [<禁言时间(s)>]'))
+        return
     qq = r.match(args).group(1)
     duration = r.match(args).group(2)
     if not duration:
         duration = 60
     if qq == 'all':
-        await bot.call_api('set_group_whole_ban', {
-            'group_id': json.loads(event.json())['group_id'],
-            'enable': (not(duration == 0))
-        })
+        await bot.call_api(
+            'set_group_whole_ban',
+            group_id=json.loads(event.json())['group_id'],
+            enable=(not(duration == 0))
+        )
         return
-    await bot.call_api('set_group_ban', {
-        'user_id': int(qq),
-        'group_id': json.loads(event.json())['group_id'],
-        'duration': duration
-    })
-    await bot.send(event, ms.text(qq))
+    await bot.call_api(
+        'set_group_ban',
+        user_id=int(qq),
+        group_id=json.loads(event.json())['group_id'],
+        duration=duration
+    )
+
+
 @cancel_ban.handle()
 async def handle_first_receive(bot: Bot, event: MessageEvent, state: T_State):
     args = str(event.get_message()).strip()
