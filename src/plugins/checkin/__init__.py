@@ -59,5 +59,8 @@ async def create_data(msg):
 
 @checkin.handle()
 async def _(bot: Bot, event: Event, state: T_State):
-    await checkin.send(event.get_session_id()) 
+    await checkin.send(
+        'session_id=' + event.get_session_id() + '\n'
+        +'user_id=' + event.get_user_id()
+    ) 
     # data = db.user.find_one({'group_id': event.grou})
