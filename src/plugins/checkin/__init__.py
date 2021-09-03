@@ -187,7 +187,7 @@ class Checkin(User):
                       font=fontpath, fontsize=60, fill=(128, 64, 64))
         y += txy[1] + 60
         y += (await putText(draw, x, y,
-                            ('金币总数:', self.today_favor), font=fontpath, fontsize=60))[1]
+                            ('金币总数:', self.today_coin), font=fontpath, fontsize=60))[1]
         # endregion
 
         # region 输出水印
