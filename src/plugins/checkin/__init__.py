@@ -19,7 +19,7 @@ db = client['qbot']
 userdb = client['user']
 # -- ------ --
 
-NAME = list(nonebot.nickname)[0]
+NAME = list(nonebot.get_driver().config.nickname)[0]
 root_path = os.path.join('.', 'res', 'sign')
 card_ratio = 16 / 9
 
