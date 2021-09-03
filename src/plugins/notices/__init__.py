@@ -15,7 +15,7 @@ import pymongo
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
 
-increase = on_notice(priority=2, permission=GROUP, block=False)
+increase = on_notice(priority=2, block=False)
 
 
 @increase.handle()
