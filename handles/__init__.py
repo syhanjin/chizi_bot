@@ -39,7 +39,7 @@ class User:
         if data == None:
             data = {}
 
-        def _(k, v): return data[k] if(k in data) else v
+        def _(k, v): return data[k] if(data.get(k)!=None) else v
         self.favor = _('favor', 0)
         self.favorLvl = _('favorLvl', 0)
         self.coin = _('coin', 0)

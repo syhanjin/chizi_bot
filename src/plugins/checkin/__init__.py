@@ -38,7 +38,7 @@ class Checkin(User):
         if data == None:
             data = {}
 
-        def _(k, v): return data[k] if(k in data) else v
+        def _(k, v): return data[k] if(data.get(k)!=None) else v
         self.last = _('last', None)
         self.continuity = _('continuity', 0)
 
