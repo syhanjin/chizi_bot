@@ -1,5 +1,6 @@
 
 import datetime
+from handles import User
 import json
 from nonebot import on_message
 from nonebot.adapters.cqhttp import Bot, MessageEvent
@@ -45,15 +46,15 @@ async def _(bot: Bot, event: MessageEvent):
     group_id, user_id = msg['group_id'], msg['user_id']
     this = Msg(group_id, user_id, msg)
     await this.save()
-
+    user = User(str(group_id), str(user_id))
     # 扩展处理
-    await flood(bot, event, this)
+    await flood(bot, event, this, user)
 
 
-async def flood(bot: Bot, event: MessageEvent, this: Msg):
+async def flood(bot: Bot, event: MessageEvent, this: Msg, user: User):
     f4 = await this.fisrt_seconds(4)
-    if f4.count() + 1 >= 3:
-        # 4秒内发送消息3次则禁言 60s
+    if f4.count() >= 4 and user.admin == 0:
+        # 4秒内发送消息4次则禁言 60s
         await bot.call_api(
             'set_group_ban',
             user_id=this.user_id,
