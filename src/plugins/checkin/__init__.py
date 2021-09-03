@@ -7,7 +7,7 @@ from nonebot import on_command
 from nonebot.adapters import Bot, Event
 from nonebot.typing import T_State
 from PIL import Image, ImageDraw, ImageFont
-from utils.message_builder import image
+# from utils.message_builder import image
 
 checkin = on_command("签到", priority=5)
 
