@@ -75,10 +75,10 @@ class Checkin(User):
 
         # region 输出用户名 && QQ && sakuyark
         y = 10
-        y += await putText(draw, 40, y, self.card, font=fontpath,
-                     fill=(255, 255, 255), fontsize=128, border=1.5)[1]
-        y += await putText(draw, 40, y, ('QQ:', self.user_id), font=fontpath,
-                     fill=(255, 255, 255), fontsize=96, border=1.5)[1]
+        y += (await putText(draw, 40, y, self.card, font=fontpath,
+                     fill=(255, 255, 255), fontsize=128, border=1.5))[1]
+        y += (await putText(draw, 40, y, ('QQ:', self.user_id), font=fontpath,
+                     fill=(255, 255, 255), fontsize=96, border=1.5))[1]
         if self.user:
             await putText(draw, 40, y, ('Sakuyark:', self.user), font=fontpath, fill=(
                 255, 255, 255), fontsize=96, border=1.5)
