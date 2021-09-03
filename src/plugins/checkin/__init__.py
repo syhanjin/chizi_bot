@@ -33,6 +33,7 @@ class Checkin(User):
         await super().__init__(group_id, user_id)
         data = db.checkin.find_one(make_query(group_id, user_id))
         await self.create(data)
+        return None
 
     async def create(self, data):
         if data == None:

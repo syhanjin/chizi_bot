@@ -33,7 +33,7 @@ class User:
             self.admin = admin['admin']
         else:
             admin = 0
-        pass
+        return None
 
     async def create(self, data):
         if data == None:
