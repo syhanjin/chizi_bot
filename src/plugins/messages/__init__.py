@@ -20,7 +20,7 @@ class Msg:
         self.user_id = user_id
         # self.text = msg.get('raw_message')
         self.id = msg.get('message_id')
-        self.time = datetime.datetime.now()
+        self.time = datetime.datetime.fromtimestamp(msg['time'])
         pass
 
     async def fisrt_seconds(self, seconds):
@@ -52,8 +52,6 @@ async def _(bot: Bot, event: MessageEvent):
 
 async def flood(bot: Bot, event: MessageEvent, this: Msg):
     f4 = await this.fisrt_seconds(4)
-    await bot.send(event, ms.text(str(list(f4))))
-    return 
     if f4.count() + 1 >= 3:
         # 4秒内发送消息3次则禁言 60s
         await bot.call_api(
