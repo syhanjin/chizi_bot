@@ -69,7 +69,9 @@ class User:
         sender = getattr(event, 'sender', None)
         if sender == None:
             return False
-        self.card = getattr(sender, 'card', getattr(sender, 'nickname', '用户名未识别'))
+        self.card = getattr(sender, 'card', None)
+        if not self.card:
+            self.card = getattr(sender, 'nickname', '用户名未识别')
         self.age = getattr(sender, 'age', None)
         self.sex = getattr(sender, 'sex', None)
         self.area = getattr(sender, 'area', None)
