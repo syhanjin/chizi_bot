@@ -82,6 +82,6 @@ async def _(bot: Bot, event: Event, state: T_State):
     # group_id = event.get_session_id().split('_')[1]
     # user_id = event.get_user_id()
     # user = User(group_id, user_id)
-    checkin.send(event.get_message())
+    await checkin.send(event.get_message())
 
 
