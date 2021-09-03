@@ -1,4 +1,3 @@
-
 import pymongo
 
 client = pymongo.MongoClient('127.0.0.1', 27017)
@@ -6,7 +5,7 @@ db = client['qbot']
 
 
 class User:
-    def __init__(self, group_id, user_id):
+    def __init__(self, group_id: str, user_id: str):
         self.__group_id = group_id
         self.__user_id = user_id
         data = db.user.find_one({'group_id': group_id, 'user_id': user_id})
@@ -23,6 +22,25 @@ class User:
         self.coin = _('coin', 0)
         self.sy = _('sy', None)
         pass
+    
+
+    def update_from_msg(self,msg):
+        if msg == None or 'sender' not in msg:
+            return False
+        sender = msg['sender']
+        self.__card = sender['card'] if('card' in sender) else sender.get('nickname')
+        self.__age = sender.get('age')
+        self.__sex = sender.get('sex')
+        self.__area = sender.get('area')
+        self.__level = sender.get('level')
+        self.__title = sender.get('title')
+        self.__role = sender.get('role')
+        if self.__role == 'admin':
+            self.__admin = 2
+        elif self.__role == 'owner':
+            self.__admin = 3
+        return True
+
 
     def save(self):
         db.user.update_one(

@@ -27,7 +27,7 @@ card_ratio = 16 / 9
 
 # -- 签到类 --
 class Checkin(User):
-    def __init__(self, group_id, user_id):
+    def __init__(self, group_id: str, user_id: str):
         super().__init__(group_id, user_id)
         data = db.checkin.find_one({'group_id':group_id, 'user_id': user_id})
         self.create(data)
@@ -77,8 +77,9 @@ async def create_data(msg):
 
 @checkin.handle()
 async def _(bot: Bot, event: MessageEvent):
-    group_id = event.json
-    # user = User(group_id, user_id)
-    await checkin.send(str(event.json()))
-
+    group_id = str(event.json()['group_id'])
+    user_id = str(event.json()['user_id'])
+    user = User(group_id, user_id)
+    user.update_from_msg(event.json())
+    
 
