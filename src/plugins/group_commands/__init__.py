@@ -10,10 +10,10 @@ from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
 
 set_ban = on_command(
-    "禁言", priority=5, permission=GROUP_ADMIN | GROUP_OWNER | SUPERUSER
+    "禁言", priority=2, permission=GROUP_ADMIN | GROUP_OWNER | SUPERUSER
 )
 cancel_ban = on_command(
-    "解禁", aliases=['解除禁言'], priority=5, permission=GROUP_ADMIN | GROUP_OWNER | SUPERUSER
+    "解禁", aliases=['解除禁言'], priority=2, permission=GROUP_ADMIN | GROUP_OWNER | SUPERUSER
 )
 
 
@@ -38,6 +38,7 @@ async def handle_first_receive(bot: Bot, event: MessageEvent, state: T_State):
         'group_id': json.loads(event.json())['group_id'],
         'duration': duration
     })
+    await bot.send(event, ms.text(qq))
 @cancel_ban.handle()
 async def handle_first_receive(bot: Bot, event: MessageEvent, state: T_State):
     args = str(event.get_message()).strip()
