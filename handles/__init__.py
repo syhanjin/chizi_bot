@@ -14,7 +14,14 @@ class User:
         self.group_id = group_id
         self.user_id = user_id
         data = db.user.find_one(make_query(group_id, user_id))
-        self.create(data)
+        if data == None:
+            data = {}
+
+        def _(k, v): return data[k] if(k in data) else v
+        self.favor = _('favor', 0)
+        self.favorLvl = _('favorLvl', 0)
+        self.coin = _('coin', 0)
+        self.sy = _('sy', None)
         admin = db.admin.find_one({
             '$or': [
                 make_query(group_id, user_id),
@@ -34,17 +41,6 @@ class User:
         else:
             admin = 0
         return None
-
-    def create(self, data):
-        if data == None:
-            data = {}
-
-        def _(k, v): return data[k] if(k in data) else v
-        self.favor = _('favor', 0)
-        self.favorLvl = _('favorLvl', 0)
-        self.coin = _('coin', 0)
-        self.sy = _('sy', None)
-        pass
 
     def update_from_msg(self, msg):
         if msg == None or 'sender' not in msg:

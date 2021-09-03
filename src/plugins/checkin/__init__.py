@@ -32,15 +32,12 @@ class Checkin(User):
     def __init__(self, group_id: str, user_id: str):
         super().__init__(group_id, user_id)
         data = db.checkin.find_one(make_query(group_id, user_id))
-        self.create(data)
-        return None
-
-    def create(self, data):
         if data == None:
             data = {}
         def _(k, v): return data[k] if(k in data) else v
         self.last =  _('last', None)
         self.continuity = _('continuity', 0)
+        return None
 
     def checkin(self):
         # 信息变更
