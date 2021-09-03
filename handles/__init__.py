@@ -47,8 +47,7 @@ class User:
         if msg == None or 'sender' not in msg:
             return False
         sender = msg['sender']
-        if sender.get('card'):
-            self.card = sender.get('card') or sender.get('nickname') or self.card = '用户名未识别'
+        self.card = (sender.get('card') or sender.get('nickname') or '用户名未识别')
         self.age = sender.get('age')
         self.sex = sender.get('sex')
         self.area = sender.get('area')
