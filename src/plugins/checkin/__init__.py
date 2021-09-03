@@ -197,8 +197,7 @@ class Checkin(User):
                     'last': self.last,
                     'continuity': self.continuity,
                 }
-            },
-            {'upsert': True}
+            },True
         )
 
 # -- ------ --

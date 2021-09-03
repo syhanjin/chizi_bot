@@ -72,8 +72,7 @@ class User:
                     'coin': self.coin,
                     'sy': self.sy,
                 }
-            },
-            {'upsert': True}
+            },True
         )
 
     def add_favor(self, favor):
