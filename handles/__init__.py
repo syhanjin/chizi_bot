@@ -40,7 +40,7 @@ class User:
         if admin != None:
             self.admin = admin['admin']
         else:
-            admin = 0
+            self.admin = 0
         return None
 
     def update_from_msg(self, msg):
