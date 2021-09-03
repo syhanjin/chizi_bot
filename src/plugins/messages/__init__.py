@@ -12,7 +12,7 @@ import pymongo
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
 
-main = on_message(permission=GROUP)
+main = on_message(permission=GROUP, block=False)
 
 
 class Msg:
