@@ -48,6 +48,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     this = Msg(group_id, user_id, event)
     await this.save()
     user = User(str(group_id), str(user_id))
+    user.update_from_event(event)
     # 扩展处理
     await flood(bot, event, this, user)
     await cards(bot, event, this, user)
