@@ -1,11 +1,12 @@
 
 import datetime
+import re
 
 from nonebot.adapters.cqhttp.event import GroupMessageEvent
 from handles import User
 import json
 from nonebot import on_message
-from nonebot.adapters.cqhttp import Bot, MessageEvent
+from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.message import MessageSegment as ms
 from nonebot.adapters.cqhttp.permission import GROUP
 import pymongo
@@ -18,12 +19,11 @@ main = on_message(permission=GROUP, block=False)
 
 
 class Msg:
-    def __init__(self, group_id, user_id, msg):
+    def __init__(self, group_id, user_id, event: GroupMessageEvent):
         self.group_id = group_id
         self.user_id = user_id
-        # self.text = msg.get('raw_message')
-        self.id = msg.get('message_id')
-        self.time = datetime.datetime.fromtimestamp(msg['time'])
+        self.id = event.message_id
+        self.time = datetime.datetime.fromtimestamp(event.time)
         pass
 
     async def fisrt_seconds(self, seconds):
@@ -43,17 +43,17 @@ class Msg:
 
 
 @main.handle()
-async def _(bot: Bot, event: MessageEvent):
-    msg = json.loads(event.json())
-    group_id, user_id = msg['group_id'], msg['user_id']
-    this = Msg(group_id, user_id, msg)
+async def _(bot: Bot, event: GroupMessageEvent):
+    group_id, user_id = event.group_id, event.user_id
+    this = Msg(group_id, user_id, event)
     await this.save()
     user = User(str(group_id), str(user_id))
     # 扩展处理
     await flood(bot, event, this, user)
+    await cards(bot, event, this, user)
 
 
-async def flood(bot: Bot, event: MessageEvent, this: Msg, user: User):
+async def flood(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
     f4 = await this.fisrt_seconds(4)
     if f4.count() >= 4 and user.admin == 0:
         # 4秒内发送消息4次则禁言 60s
@@ -68,6 +68,13 @@ async def flood(bot: Bot, event: MessageEvent, this: Msg, user: User):
             await bot.call_api('delete_msg', message_id=i['id'])
         await bot.call_api('delete_msg', message_id=this.id)
 
+
+async def cards(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
+    group_id = event.group_id
+    data = db.cards.find_one({'group_id': group_id})
+    if not user.user_id in data['special'] and not re.search(data['reg'], user.card, re.I):
+        await bot.send(event,ms.text('请修改名片，名片格式 ' + data['format']),at_sender=True)
+    
 
 # async def keyword_delete(bot: Bot, event: MessageEvent, user: User):
 #     if not isinstance(event, GroupMessageEvent) or user.admin > 0:
