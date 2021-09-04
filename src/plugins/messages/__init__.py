@@ -74,14 +74,16 @@ async def flood(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
 # 对群名片识别
 async def cards(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
     group_id = event.group_id
-    data = db.cards.find_one({'group_id': group_id, 'special': {'$nin': int(user.user_id)}})
+    data = db.cards.find_one({
+        'group_id': group_id,
+        'special': {'$not':  {'$elemMatch': int(user.user_id)}}
+    })
     if data is None:
         return
     if not re.search(data['reg'], user.card, re.I):
-        await bot.send(event,ms.text('请修改名片，名片格式 ' + data['format']),at_sender=True)
-    
+        await bot.send(event, ms.text('请修改名片，名片格式 ' + data['format']), at_sender=True)
+
 
 # async def keyword_delete(bot: Bot, event: MessageEvent, user: User):
 #     if not isinstance(event, GroupMessageEvent) or user.admin > 0:
 #         return
-    
