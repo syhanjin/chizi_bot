@@ -76,7 +76,7 @@ async def cards(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
     group_id = event.group_id
     data = db.cards.find_one({
         'group_id': group_id,
-        'special': {'$not':  {'$elemMatch': int(user.user_id)}}
+        'special': {'$nin': [int(user.user_id)]}
     })
     if data is None:
         return
