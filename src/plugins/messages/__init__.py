@@ -54,6 +54,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     await cards(bot, event, this, user)
 
 
+# 判定刷屏
 async def flood(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
     f4 = await this.fisrt_seconds(4)
     if f4.count() >= 4 and user.admin == 0:
@@ -70,10 +71,11 @@ async def flood(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
         await bot.call_api('delete_msg', message_id=this.id)
 
 
+# 对群名片识别
 async def cards(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
     group_id = event.group_id
     data = db.cards.find_one({'group_id': group_id})
-    if not user.user_id in data['special'] and not re.search(data['reg'], user.card, re.I):
+    if not int(user.user_id) in data['special'] and not re.search(data['reg'], user.card, re.I):
         await bot.send(event,ms.text('请修改名片，名片格式 ' + data['format']),at_sender=True)
     
 
