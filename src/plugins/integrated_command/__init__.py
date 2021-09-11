@@ -17,7 +17,7 @@ userdb = client['user']
 
 
 pri_group_kw = on_command(
-    'kw', aliases=['修改群关键字', '编辑群关键字', '群关键字'],
+    'kw', aliases={'修改群关键字', '编辑群关键字', '群关键字'},
     permission=PRIVATE
 )
 
