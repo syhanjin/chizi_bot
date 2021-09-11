@@ -28,7 +28,7 @@ async def _increase(bot: Bot, event: GroupIncreaseNoticeEvent):
     return
 
 
-disban = on_notice(priority=1, block=False, permission=GROUP | SUPERUSER)
+disban = on_notice(priority=1, block=False)
 
 
 @disban.handle()
