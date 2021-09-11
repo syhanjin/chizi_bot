@@ -34,6 +34,12 @@ disban = on_notice(priority=1, block=False)
 @disban.handle()
 async def _disban(bot: Bot, event: GroupBanNoticeEvent):
 
-    await bot.send(event, ms.text('禁言事件测试：Event => ')+ms.text(str(event.json)))
-    # if event.user_id != 'all'
-    # await bot.call_api('set_group_ban')
+    # await bot.send(event, ms.text('禁言事件测试：Event => ')+ms.text(str(event.json)))
+    if event.user_id == 2819469337 and event.sub_type == 'ban':
+        await bot.call_api(
+            'set_group_ban',
+            group_id=event.group_id,
+            user_id=event.user_id,
+            duration=0
+        )
+        await bot.send(event, ms.text('超级用户自动反禁言'))
