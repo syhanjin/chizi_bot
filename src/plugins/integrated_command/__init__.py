@@ -51,9 +51,9 @@ async def _pgk_last(bot: Bot, event: PrivateMessageEvent, state: T_State):
         'key': key,
         'deadtime': deadtime
     })
-    await pri_group_kw.finish(event, ms.text(
+    await pri_group_kw.finish(
         f"""编辑链接已生成
 https://sakuyark.com/qbot/kw/{group_id}?key={key}
 有效期至 {deadtime.__format__("%Y-%m-%d %H:%M:%S")}
 """
-    ))
+    )
