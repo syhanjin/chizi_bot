@@ -40,7 +40,7 @@ async def _pgk_last(bot: Bot, event: PrivateMessageEvent, state: T_State):
     except:
         await pri_group_kw.reject("群号输入不正确")
     member = await bot.call_api('get_group_member_info', group_id=group_id, user_id=event.user_id)
-    user = User(group_id, event.user_id)
+    user = User(str(group_id), str(event.user_id))
     user.update_from_info(member)
     if not user.update_from_info(member) or user.admin == 0:
         await pri_group_kw.finish("你并非此群管理员")
