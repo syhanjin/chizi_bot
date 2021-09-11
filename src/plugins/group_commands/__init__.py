@@ -17,6 +17,7 @@ cancel_ban = on_command(
 )
 
 
+
 @set_ban.handle()
 async def handle_first_receive(bot: Bot, event: MessageEvent, state: T_State):
     args = str(event.get_message()).strip()
@@ -63,3 +64,5 @@ async def handle_first_receive(bot: Bot, event: MessageEvent, state: T_State):
         group_id=json.loads(event.json())['group_id'],
         duration=0
     )
+
+

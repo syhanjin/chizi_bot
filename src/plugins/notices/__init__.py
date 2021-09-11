@@ -20,9 +20,11 @@ increase = on_notice(priority=2, block=False)
 @increase.handle()
 async def _increase(bot: Bot, event: GroupIncreaseNoticeEvent):
     data = db.increase.find_one({'group_id': event.group_id})
-    if data == None:
+    if data is None:
         msg = '欢迎新成员，请先看群公告~~~'
     else:
+        if not data.get('opened'):
+            return
         msg = data['msg']
     await bot.send(event, f"{msg}", at_sender=True)
     return

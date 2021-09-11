@@ -77,6 +77,23 @@ class User:
         elif self.role == 'owner':
             self.admin = 3
         return True
+    
+    def update_from_info(self, sender):
+        if sender == None:
+            return False
+        self.card = getattr(sender, 'card', None) or getattr(
+            sender, 'nickname', '用户名未识别')
+        self.age = getattr(sender, 'age', None)
+        self.sex = getattr(sender, 'sex', None)
+        self.area = getattr(sender, 'area', None)
+        self.level = getattr(sender, 'level', None)
+        self.title = getattr(sender, 'title', None)
+        self.role = getattr(sender, 'role', None)
+        if self.role == 'admin':
+            self.admin = 2
+        elif self.role == 'owner':
+            self.admin = 3
+        return True
 
     async def save(self):
         db.user.update_one(

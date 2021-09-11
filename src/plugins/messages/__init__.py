@@ -56,17 +56,17 @@ async def _(bot: Bot, event: GroupMessageEvent):
 
 # 判定刷屏
 async def flood(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
-    f4 = await this.fisrt_seconds(4)
-    if f4.count() >= 4 and user.admin == 0:
-        # 4秒内发送消息4次则禁言 60s
+    f10 = await this.fisrt_seconds(10)
+    if f10.count() >= 10 and user.admin == 0:
+        # 10秒内发送消息10次则禁言 300s
         await bot.call_api(
             'set_group_ban',
             user_id=this.user_id,
             group_id=this.group_id,
-            duration=60
+            duration=300
         )
         # 执行消息撤回
-        for i in list(f4):
+        for i in list(f10):
             await bot.call_api('delete_msg', message_id=i['id'])
         await bot.call_api('delete_msg', message_id=this.id)
 
