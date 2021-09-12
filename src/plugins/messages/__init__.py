@@ -137,11 +137,11 @@ async def keyword_delete(bot: Bot, event: GroupMessageEvent, this: Msg, user: Us
     if op is None:
         return
     if op[0] == 'ban':
-        await bot.send(event, f'''【关键字拦截】不进行操作执行--此消息触犯说明：
-主操作：禁言
-副操作：{op[1]}
-时间：{op[2]}
-''')
+#         await bot.send(event, f'''【关键字拦截】不进行操作执行--此消息触犯说明：
+# 主操作：禁言
+# 副操作：{op[1]}
+# 时间：{op[2]}
+# ''')
         await bot.call_api('set_group_ban', group_id=event.group_id,
                      user_id=event.user_id, duration=int(op[2]))
 
