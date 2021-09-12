@@ -91,7 +91,7 @@ async def cards(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
 punctuation = r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~“”？，！【】（）、。：；’‘……￥·"""
 # 载入缓存
 kws = pd.DataFrame(list(db.kw.find()))
-kws = kws[kws['opened']].group_by(['group_id', 'degree'])
+kws = kws[kws['opened']].groupby(['group_id', 'degree'])
 
 
 def _kw_op(group_id, text, degree):
