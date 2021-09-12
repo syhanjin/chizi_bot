@@ -104,12 +104,12 @@ def _kw_op(group_id, text, degree):
 
 def kw_op(group_id, text):
     ops = pd.DataFrame([])
-    if 1 in kws['degree'].unique():
+    if (group_id, 1) in kws.groups:
         ops = ops.append(_kw_op(group_id, text, 1))
-    if 2 in kws['degree'].unique():
+    if (group_id, 2) in kws.groups:
         text = text.replace(' ', '')
         ops = ops.append(_kw_op(group_id, text, 2))
-    if 3 in kws['degree'].unique():
+    if (group_id, 3) in kws.groups:
         text = text.translate(str.maketrans('', '', punctuation))
         ops = ops.append(_kw_op(group_id, text, 3))
     # 判断是否有条目符合
@@ -145,5 +145,5 @@ async def keyword_delete(bot: Bot, event: GroupMessageEvent, this: Msg, user: Us
 
         # 报告管理暂关
         # if 'report' in op[1]:
-            # 如果需要报告管理员
-            # await bot.call_api('')
+        # 如果需要报告管理员
+        # await bot.call_api('')
