@@ -183,11 +183,11 @@ class Checkin(User):
         y += txy[1]
         y += 15
         txy = await putText(draw, x, y, '金币', font=fontpath, fontsize=60)
-        await putText(draw, x + 350, y, ('+', str(self.coin)),
+        await putText(draw, x + 350, y, ('+', str(self.today_coin)),
                       font=fontpath, fontsize=60, fill=(128, 64, 64))
         y += txy[1] + 60
         y += (await putText(draw, x, y,
-                            ('金币总数:', self.today_coin), font=fontpath, fontsize=60))[1]
+                            ('金币总数:', self.coin), font=fontpath, fontsize=60))[1]
         # endregion
 
         # region 输出水印

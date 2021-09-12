@@ -38,6 +38,7 @@ async def _pgk_first(bot: Bot, event: PrivateMessageEvent, state: T_State):
         # 将参数存入state以阻止后续再向用户询问参数
         state["group_id"] = arg_list[0]
 
+
 # region 关键字编辑端
 @pri_group_kw.got('group_id', prompt='群号？')
 async def _pgk_last(bot: Bot, event: PrivateMessageEvent, state: T_State):
@@ -67,13 +68,15 @@ https://sakuyark.com/qbot/kw/{group_id}?key={key}
     )
 # endregion
 
+
 @pri_group_kw_refresh.handle()
 async def _pgk_refresh(bot: Bot, event: PrivateMessageEvent):
     # 载入缓存
     kws = pd.DataFrame(list(db.kw.find()))
     kws = kws[kws['opened']].groupby(['group_id', 'degree'])
-    await bot.send(event, 
-f'''---缓存已刷新---
+    await bot.send(event,
+                   f'''---缓存已刷新---
 {kws.count()['id']}
-'''
-)
+''')
+
+
