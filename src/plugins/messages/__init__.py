@@ -55,6 +55,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     # 扩展处理
     await flood(bot, event, this, user)
     await cards(bot, event, this, user)
+    await keyword_delete(bot, event, this, user)
 
 
 # 判定刷屏
