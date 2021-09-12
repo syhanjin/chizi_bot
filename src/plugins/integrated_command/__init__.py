@@ -55,5 +55,6 @@ async def _pgk_last(bot: Bot, event: PrivateMessageEvent, state: T_State):
         f"""编辑链接已生成
 https://sakuyark.com/qbot/kw/{group_id}?key={key}
 有效期至 {deadtime.__format__("%Y-%m-%d %H:%M:%S")}
+修改完成后请发送指令 【刷新关键字缓存】 进行刷新
 """
     )

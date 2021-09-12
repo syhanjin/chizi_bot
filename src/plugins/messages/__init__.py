@@ -1,6 +1,8 @@
 
 import datetime
 import re
+import numpy as np
+import pandas as pd
 
 from nonebot.adapters.cqhttp.event import GroupMessageEvent
 from handles import User
@@ -11,6 +13,7 @@ from nonebot.adapters.cqhttp.message import MessageSegment as ms
 from nonebot.adapters.cqhttp.permission import GROUP
 import pymongo
 
+punctuation = r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~“”？，！【】（）、。：；’‘……￥·"""
 
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
@@ -84,6 +87,58 @@ async def cards(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
         await bot.send(event, ms.text('请修改名片，名片格式 ' + data['format']), at_sender=True)
 
 
-# async def keyword_delete(bot: Bot, event: MessageEvent, user: User):
-#     if not isinstance(event, GroupMessageEvent) or user.admin > 0:
-#         return
+# 关键字拦截
+punctuation = r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~“”？，！【】（）、。：；’‘……￥·"""
+# 载入缓存
+kws = pd.DataFrame(list(db.kw.find()))
+kws = kws[kws['opened']].group_by(['group_id', 'degree'])
+
+
+def _kw_op(group_id, text, degree):
+    # 获取分组 群号
+    gp = kws.get_group((group_id, degree))
+    # 识别此关键字
+    return gp[[i in text for i in gp['kw'].values]]
+
+
+def kw_op(group_id, text):
+    ops = _kw_op(group_id, text, 1)
+    text = text.replace(' ', '')
+    ops = ops.append(_kw_op(group_id, text, 2))
+    text = text.translate(str.maketrans('', '', punctuation))
+    ops = ops.append(_kw_op(group_id, text, 3))
+    # 判断是否有条目符合
+    if ops.shape[0] == 0:
+        return None
+    # 识别主操作，如果不包含kick即为ban
+    main_op = 'kick' if 'kick' in ops['main_op'].unique() else 'ban'
+    # 副操作 -- 使用set去重
+    seco_op = set(ops['seco_op'].sum())
+    # 识别数据
+    if main_op == 'ban':
+        ban_time = ops['ban_time'].max()
+    else:
+        kick_warn = ops['kick_warn'].min()
+        # 暂不开启踢出识别
+        return None
+    return (main_op, seco_op, (ban_time))
+
+
+async def keyword_delete(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
+    text = event.raw_message
+    op = kw_op(event.group_id, text)
+    if op is None:
+        return
+    if op[0] == 'ban':
+        await bot.send(event, f'''【关键字拦截】不进行操作执行--此消息触犯说明：
+主操作：禁言
+副操作：{op[1]}
+时间：{op[2]}
+''')
+        # await bot.call_api('set_group_ban', group_id=event.group_id,
+        #              user_id=event.user_id, duration=op[2])
+
+        # 报告管理暂关
+        # if 'report' in op[1]:
+            # 如果需要报告管理员
+            # await bot.call_api('')
