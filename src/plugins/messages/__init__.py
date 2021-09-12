@@ -106,11 +106,11 @@ def kw_op(group_id, text):
     ops = pd.DataFrame([])
     if (group_id, 1) in kws.groups:
         ops = ops.append(_kw_op(group_id, text, 1))
+    text = text.replace(' ', '').replace('\n', '')
     if (group_id, 2) in kws.groups:
-        text = text.replace(' ', '')
         ops = ops.append(_kw_op(group_id, text, 2))
+    text = text.translate(str.maketrans('', '', punctuation))
     if (group_id, 3) in kws.groups:
-        text = text.translate(str.maketrans('', '', punctuation))
         ops = ops.append(_kw_op(group_id, text, 3))
     # 判断是否有条目符合
     if ops.shape[0] == 0:
