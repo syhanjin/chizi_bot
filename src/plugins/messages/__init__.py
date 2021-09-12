@@ -144,7 +144,7 @@ async def keyword_delete(bot: Bot, event: GroupMessageEvent, this: Msg, user: Us
 # ''')
         await bot.call_api('set_group_ban', group_id=event.group_id,
                      user_id=event.user_id, duration=int(op[2]))
-
+        await bot.call_api('delete_msg', message_id=this.id)
         # 报告管理暂关
         # if 'report' in op[1]:
         # 如果需要报告管理员
