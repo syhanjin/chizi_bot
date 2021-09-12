@@ -103,16 +103,20 @@ def _kw_op(group_id, text, degree):
 
 
 def kw_op(group_id, text):
-    ops = _kw_op(group_id, text, 1)
-    text = text.replace(' ', '')
-    ops = ops.append(_kw_op(group_id, text, 2))
-    text = text.translate(str.maketrans('', '', punctuation))
-    ops = ops.append(_kw_op(group_id, text, 3))
+    ops = pd.DataFrame([])
+    if 1 in kws['degree'].unique():
+        ops = ops.append(_kw_op(group_id, text, 1))
+    if 2 in kws['degree'].unique():
+        text = text.replace(' ', '')
+        ops = ops.append(_kw_op(group_id, text, 2))
+    if 3 in kws['degree'].unique():
+        text = text.translate(str.maketrans('', '', punctuation))
+        ops = ops.append(_kw_op(group_id, text, 3))
     # 判断是否有条目符合
     if ops.shape[0] == 0:
         return None
     # 识别主操作，如果不包含kick即为ban
-    main_op = 'kick' if 'kick' in ops['main_op'].unique() else 'ban'
+    main_op = 'kick' if ('kick' in ops['main_op'].unique()) else 'ban'
     # 副操作 -- 使用set去重
     seco_op = set(ops['seco_op'].sum())
     # 识别数据
