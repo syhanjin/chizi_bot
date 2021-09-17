@@ -23,9 +23,9 @@ class User():
         self.number = _('number', None)
         self.name = _('name', None)
 
-        admin = db.admin.find_one({
+        admin = db.admin.find_one(
             {'user_id': user_id, 'admin': {'$gte': 4}}
-        })
+        )
         user = userdb.userdata.find_one({'qq': user_id})
         self.user = None
         if user != None:
@@ -72,4 +72,3 @@ class User():
                 }
             }, True
         )
-    
