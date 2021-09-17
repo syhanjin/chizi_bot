@@ -39,7 +39,7 @@ async def _identity_name(bot: Bot, event: PrivateMessageEvent, state: T_State):
     name = state['name']
     class_ = state['class']
     number = state['number']
-    await bot.send(event, f'{state}')
+    await bot.send(event, f'name={name}, class={class_}, number={number}')
     if name or class_ or number is None:
         await identity.finish('数据异常')
 
