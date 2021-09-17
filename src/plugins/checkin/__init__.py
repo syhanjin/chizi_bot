@@ -1,7 +1,7 @@
 from nonebot.adapters.cqhttp.event import GroupMessageEvent
 import pymongo
 import datetime
-from handles import User, make_query
+from handles.group import User, make_query
 import os
 import json
 import random

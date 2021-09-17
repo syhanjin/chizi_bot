@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from nonebot.adapters.cqhttp.event import GroupMessageEvent
-from handles import User
+from handles.group import User
 import json
 from nonebot import on_message
 from nonebot.adapters.cqhttp import Bot

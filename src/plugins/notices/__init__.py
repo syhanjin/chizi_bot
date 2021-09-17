@@ -1,6 +1,6 @@
 
 import datetime
-from handles import User
+from handles.group import User
 import json
 import nonebot
 from nonebot import on_notice
