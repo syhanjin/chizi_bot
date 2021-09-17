@@ -1,7 +1,7 @@
 
 from nonebot.adapters.cqhttp.event import FriendRequestEvent
 from nonebot.permission import REQUEST
-from handles import User
+from handles import group
 import json
 from nonebot import on_request
 from nonebot.adapters.cqhttp import Bot
