@@ -8,7 +8,7 @@ from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.message import MessageSegment as ms
 from nonebot.adapters.cqhttp.permission import GROUP
 
-friend_request = on_request(permission=REQUEST, priority=1, block=False)
+friend_request = on_request(priority=1, block=False)
 
 
 @friend_request.handle()
