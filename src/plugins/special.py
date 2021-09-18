@@ -7,7 +7,7 @@ from nonebot.matcher import Matcher
 from nonebot.message import run_postprocessor
 from nonebot.typing import T_State
 
-@run_postprocessor
+@run_preprocessor
 async def do_something(matcher: Matcher, exception: Optional[Exception], bot: Bot, event: GroupMessageEvent, state: T_State):
     
 
