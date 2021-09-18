@@ -15,7 +15,7 @@ userdb = client['user']
 
 c_number = re.compile('^([CK]\d{4})(\d{2})$')
 identity = on_command(
-    "identity", aliases={'身份验证', '验证'}, priority=2, block=True, permission=PRIVATE
+    "identity", aliases={'身份验证', '验证'}, priority=3, block=True, permission=PRIVATE
 )
 
 
@@ -34,7 +34,7 @@ async def _identity_class(bot: Bot, event: PrivateMessageEvent, state: T_State):
     state['number'] = m.group(2)
 
 
-@identity.got('name', '请输入姓名')
+@identity.got('name', prompt='请输入姓名')
 async def _identity_name(bot: Bot, event: PrivateMessageEvent, state: T_State):
     name = state['name']
     class_ = state['class']
