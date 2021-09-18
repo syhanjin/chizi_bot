@@ -12,4 +12,4 @@ async def do_something(matcher: Matcher, exception: Optional[Exception], bot: Bo
     
 
     if event.group_id == 457263503:
-        raise IgnoredException('此群不做处理')
+        matcher.stop_propagation()
