@@ -7,9 +7,9 @@ from nonebot.matcher import Matcher
 from nonebot.message import run_preprocessor
 from nonebot.typing import T_State
 
+
 @run_preprocessor
-async def do_something(matcher: Matcher, exception: Optional[Exception], bot: Bot, event: GroupMessageEvent, state: T_State):
-    
+async def _(matcher: Matcher, bot: Bot, event: GroupMessageEvent):
 
     if event.group_id == 457263503:
         matcher.stop_propagation()
