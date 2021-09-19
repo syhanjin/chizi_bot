@@ -1,5 +1,6 @@
 
 from typing import Optional
+from nonebot.adapters.cqhttp.permission import GROUP
 from nonebot.exception import IgnoredException
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.event import Event, GroupMessageEvent
@@ -9,7 +10,7 @@ from nonebot.plugin import on_metaevent
 from nonebot.typing import T_State
 
 
-onEVENT = on_metaevent(priority=1, block=False)
+onEVENT = on_metaevent(priority=1, permission=GROUP, block=False)
 
 
 @run_preprocessor
