@@ -6,11 +6,11 @@ from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.event import Event, GroupMessageEvent
 from nonebot.matcher import Matcher
 from nonebot.message import run_preprocessor
-from nonebot.plugin import on_metaevent
+from nonebot.plugin import on_message, on_metaevent
 from nonebot.typing import T_State
 
 
-onEVENT = on_metaevent(priority=1, permission=GROUP, block=False)
+onEVENT = on_message(priority=1, permission=GROUP, block=False)
 
 
 @run_preprocessor
