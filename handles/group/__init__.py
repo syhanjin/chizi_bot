@@ -10,6 +10,7 @@ def make_query(group_id: str, user_id: str): return {
 
 
 class User:
+    admin = 0
     def __init__(self, group_id: str, user_id: str):
         self.group_id = group_id
         self.user_id = user_id
@@ -55,9 +56,9 @@ class User:
         self.title = sender.get('title')
         self.role = sender.get('role')
         if self.role == 'admin':
-            self.admin = 2
+            self.admin = max(self.admin, 2)
         elif self.role == 'owner':
-            self.admin = 3
+            self.admin = max(self.admin, 3)
         return True
 
     def update_from_event(self, event):
@@ -73,9 +74,9 @@ class User:
         self.title = getattr(sender, 'title', None)
         self.role = getattr(sender, 'role', None)
         if self.role == 'admin':
-            self.admin = 2
+            self.admin = max(self.admin, 2)
         elif self.role == 'owner':
-            self.admin = 3
+            self.admin = max(self.admin, 3)
         return True
     
     def update_from_info(self, sender):
@@ -90,9 +91,9 @@ class User:
         self.title = getattr(sender, 'title', None)
         self.role = getattr(sender, 'role', None)
         if self.role == 'admin':
-            self.admin = 2
+            self.admin = max(self.admin, 2)
         elif self.role == 'owner':
-            self.admin = 3
+            self.admin = max(self.admin, 3)
         return True
 
     async def save(self):

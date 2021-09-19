@@ -13,3 +13,4 @@ async def _(matcher: Matcher, bot: Bot, event: GroupMessageEvent, state: T_State
 
     if event.group_id == 457263503:
         matcher.stop_propagation()
+        matcher.finish()
