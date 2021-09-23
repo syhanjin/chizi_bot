@@ -150,5 +150,5 @@ async def keyword_delete(bot: Bot, event: GroupMessageEvent, this: Msg, user: Us
         # 如果需要报告管理员
         # await bot.call_api('')
     if op[0] == 'kick':
-        await bot.call_api('set_group_kick', group_id=event.group_id,
-                           user_id=event.user_id)
+        await bot.call_api('set_group_kick', group_id=event.group_id, user_id=event.user_id)
+        await bot.call_api('delete_msg', message_id=this.id)
