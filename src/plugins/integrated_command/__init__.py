@@ -20,11 +20,13 @@ userdb = client['user']
 
 pri_group_kw = on_command(
     'kw', aliases={'修改群关键字', '编辑群关键字', '群关键字'},
+    priority=3,
     permission=PRIVATE
 )
 
 pri_group_kw_refresh = on_command(
     'kwrefresh', aliases={'刷新关键字缓存', 'rekw', '关键字刷新'},
+    priority=3,
     permission=PRIVATE
 )
 

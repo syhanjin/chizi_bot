@@ -1,4 +1,5 @@
 
+from nonebot.exception import IgnoredException
 from nonebot.adapters.cqhttp.permission import GROUP
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.event import Event, GroupMessageEvent
@@ -17,4 +18,4 @@ async def _(matcher: Matcher, bot: Bot, event: GroupMessageEvent, state: T_State
         
         pass
     elif event.group_id == 457263503:
-        matcher.stop_propagation()
+        raise IgnoredException("此群已屏蔽")
