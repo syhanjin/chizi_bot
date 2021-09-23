@@ -15,6 +15,7 @@ onEVENT = on_message(priority=1, permission=GROUP, block=False)
 
 @run_preprocessor
 async def _(matcher: Matcher, bot: Bot, event: GroupMessageEvent, state: T_State):
-
+    if not isinstance(event, GroupMessageEvent):
+        return 
     if event.group_id == 457263503:
         matcher.stop_propagation()

@@ -124,8 +124,8 @@ def kw_op(group_id, text):
         ban_time = ops['ban_time'].max()
     else:
         kick_warn = ops['kick_warn'].min()
-        # 暂不开启踢出识别
-        return None
+        # 暂不开启踢出警告计数
+        return (main_op, seco_op, (kick_warn))
     return (main_op, seco_op, (ban_time))
 
 
@@ -149,3 +149,6 @@ async def keyword_delete(bot: Bot, event: GroupMessageEvent, this: Msg, user: Us
         # if 'report' in op[1]:
         # 如果需要报告管理员
         # await bot.call_api('')
+    if op[0] == 'kick':
+        await bot.call_api('set_group_kick', group_id=event.group_id,
+                           user_id=event.user_id)
