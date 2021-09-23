@@ -1,7 +1,5 @@
 
-from typing import Optional
 from nonebot.adapters.cqhttp.permission import GROUP
-from nonebot.exception import IgnoredException
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.event import Event, GroupMessageEvent
 from nonebot.matcher import Matcher
@@ -16,6 +14,7 @@ onEVENT = on_message(priority=1, permission=GROUP, block=False)
 @run_preprocessor
 async def _(matcher: Matcher, bot: Bot, event: GroupMessageEvent, state: T_State):
     if not isinstance(event, GroupMessageEvent):
-        return 
-    if event.group_id == 457263503:
+        
+        pass
+    elif event.group_id == 457263503:
         matcher.stop_propagation()
