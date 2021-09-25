@@ -17,6 +17,6 @@ async def _(bot: Bot, event: PrivateMessageEvent):
     await bot.send(event, welcome(
         '欢迎',
         'https://sakuyark.com/static/images/icon.jpg',
-        [{'title':'温馨提示','value':'我就是测试'}],
-        [{'name':'Sakuyark','action':'https://sakuyark.com'}]
-        ))
+        [('我就是测试',)],
+        [('Sakuyark', 'https://sakuyark.com')]
+    ))
