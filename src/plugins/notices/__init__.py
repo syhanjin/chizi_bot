@@ -31,7 +31,7 @@ async def _increase(bot: Bot, event: GroupIncreaseNoticeEvent):
         if not data.get('opened'):
             return
         msg = data['msg']
-    await bot.send(event, msg, at_sender=True)
+    await bot.send(event, msg)
     return
 
 
