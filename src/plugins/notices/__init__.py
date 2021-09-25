@@ -1,5 +1,6 @@
 
 import datetime
+from handles.message_builder import welcome
 from handles.group import User
 import json
 import nonebot
@@ -21,12 +22,16 @@ increase = on_notice(priority=2, block=False)
 async def _increase(bot: Bot, event: GroupIncreaseNoticeEvent):
     data = db.increase.find_one({'group_id': event.group_id})
     if data is None:
-        msg = '欢迎新成员，请先看群公告~~~'
+        msg = welcome(
+            '欢迎上船',
+            'https://sakuyark.com/static/images/icon.jpg',
+            [('请先查看置顶公告',)]
+        )
     else:
         if not data.get('opened'):
             return
         msg = data['msg']
-    await bot.send(event, f"{msg}", at_sender=True)
+    await bot.send(event, msg, at_sender=True)
     return
 
 
