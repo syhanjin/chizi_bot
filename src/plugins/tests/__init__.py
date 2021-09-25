@@ -16,7 +16,7 @@ t1 = on_command(
 async def _(bot: Bot, event: PrivateMessageEvent):
     await bot.send(event, welcome(
         '欢迎',
-        'https://sakuyark/static/images/icon.png',
+        'https://sakuyark.com/static/images/icon.jpg',
         [{'title':'温馨提示','value':'我就是测试'}],
-        [{'name':'Sakuyark','action':'https://sakuyark'}]
+        [{'name':'Sakuyark','action':'https://sakuyark.com'}]
         ))
