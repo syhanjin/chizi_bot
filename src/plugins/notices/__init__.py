@@ -21,6 +21,7 @@ increase = on_notice(priority=2, block=False)
 @increase.handle()
 async def _increase(bot: Bot, event: GroupIncreaseNoticeEvent):
     data = db.increase.find_one({'group_id': event.group_id})
+    at_sender = False
     if data is None:
         msg = welcome(
             '欢迎上船',
@@ -30,8 +31,20 @@ async def _increase(bot: Bot, event: GroupIncreaseNoticeEvent):
     else:
         if not data.get('opened'):
             return
-        msg = data['msg']
-    await bot.send(event, msg)
+        type = data.get('type')
+        if type == 'text':
+            msg = data['msg']
+            at_sender = True
+        elif type == 'card':
+            msg = welcome(
+                data['text'],
+                data.get('icon'),
+                data.get('tips'),
+                data.get('buttons')
+            )
+        else :
+            return
+    await bot.send(event, msg, at_sender=at_sender)
     return
 
 
