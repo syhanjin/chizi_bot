@@ -17,12 +17,12 @@ def welcome(text: str, icon: str = '', tips: list = [], buttons: list = []):
     - action: 按钮所需跳转的网址
     '''
     proc_tips, proc_btns = [], []
-    for i in tips:
+    for i in (tips or []):
         proc_tips.append({
             'value': i[0],
             'title': '温馨提示' if (len(i) == 1) else i[1]
         })
-    for i in buttons:
+    for i in (buttons or []):
         proc_btns.append({
             'name': i[0],
             'action': i[1]
