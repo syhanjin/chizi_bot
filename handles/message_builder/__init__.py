@@ -15,6 +15,8 @@ def welcome(text: str, icon: str = '', tips: list = [], buttons: list = []):
     buttons: list，元素为一个 元组: (name, action)
     - name:   按钮内容
     - action: 按钮所需跳转的网址
+
+    **请注意在单元素元组中添加`,`以消除歧义**
     '''
     proc_tips, proc_btns = [], []
     for i in (tips or []):
