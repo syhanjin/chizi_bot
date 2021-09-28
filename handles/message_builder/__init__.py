@@ -2,7 +2,7 @@
 from nonebot.adapters.cqhttp.message import MessageSegment as ms
 
 
-def welcome(text: str, icon: str = '', tips: list = [], buttons: list = []):
+def welcome_card(text: str, icon: str = '', tips: list = [], buttons: list = []):
     '''
     text: str, 欢迎语
 
@@ -10,7 +10,7 @@ def welcome(text: str, icon: str = '', tips: list = [], buttons: list = []):
 
     tips: list, 元素为一个 元组: (text, [title])
     - text: 提示文本, 标题默认为 温馨提示
-    - title: 当添加该值，则标题将被覆盖
+    - title: 当添加该值且不为空，则标题将被覆盖
 
     buttons: list，元素为一个 元组: (name, action)
     - name:   按钮内容
@@ -19,22 +19,29 @@ def welcome(text: str, icon: str = '', tips: list = [], buttons: list = []):
     **请注意在单元素元组中添加`,`以消除歧义**
     '''
     proc_tips, proc_btns = [], []
-    for i in (tips or []):
-        proc_tips.append({
-            'value': i[0],
-            'title': '温馨提示' if (len(i) == 1) else i[1]
-        })
-    for i in (buttons or []):
-        proc_btns.append({
-            'name': i[0],
-            'action': i[1]
-        })
+    if tips:
+        for i in tips:
+            title = '温馨提示'
+            try:
+                title = i[1] or title
+            except:
+                pass
+            proc_tips.append({
+                'value': i[0],
+                'title': title
+            })
+    if buttons:
+        for i in buttons:
+            proc_btns.append({
+                'name': i[0],
+                'action': i[1]
+            })
     return ms.json({
         "app": "com.tencent.miniapp",
         "desc": "",
         "view": "notification",
         "ver": "0.0.0.1",
-        "prompt": "欢迎入群",
+        "prompt": "入群欢迎",
         "meta": {
             "notification": {
                 "appInfo": {

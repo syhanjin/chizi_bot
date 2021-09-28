@@ -1,6 +1,6 @@
 
 import datetime
-from handles.message_builder import welcome
+from handles.message_builder import welcome_card
 from handles.group import User
 import json
 import nonebot
@@ -15,15 +15,15 @@ import pymongo
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
 
-increase = on_notice(priority=2, block=False)
+welcome = on_notice(priority=2, block=False)
 
 
-@increase.handle()
-async def _increase(bot: Bot, event: GroupIncreaseNoticeEvent):
-    data = db.increase.find_one({'group_id': event.group_id})
+@welcome.handle()
+async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
+    data = db.welcome.find_one({'group_id': event.group_id})
     at_sender = False
     if data is None:
-        msg = welcome(
+        msg = welcome_card(
             '欢迎上船',
             'https://sakuyark.com/static/images/icon.jpg',
             [('请先查看置顶公告',)]
@@ -33,10 +33,10 @@ async def _increase(bot: Bot, event: GroupIncreaseNoticeEvent):
             return
         type = data.get('type')
         if type == 'text':
-            msg = data['msg']
+            msg = data['text']
             at_sender = True
         elif type == 'card':
-            msg = welcome(
+            msg = welcome_card(
                 data['text'],
                 data.get('icon'),
                 data.get('tips'),

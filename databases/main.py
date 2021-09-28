@@ -5,8 +5,9 @@ client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client['qbot']
 
 db.drop_collection('increase')
-db.create_collection('increase')
-db.increase.insert_many([
+db.drop_collection('welcome')
+db.create_collection('welcome')
+db.welcome.insert_many([
     {
         'group_id': 457263503,
         'type': 'card',
