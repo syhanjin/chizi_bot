@@ -5,7 +5,7 @@ from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.typing import T_State
 from nonebot.adapters.cqhttp.permission import PRIVATE
 from nonebot.adapters.cqhttp.message import MessageSegment as ms
-from handles.message_builder import welcome
+from handles.message_builder import welcome_card
 
 t1 = on_command(
     'test1', permission=PRIVATE, priority=1, block=False
@@ -14,7 +14,7 @@ t1 = on_command(
 
 @t1.handle()
 async def _(bot: Bot, event: PrivateMessageEvent):
-    await bot.send(event, welcome(
+    await bot.send(event, welcome_card(
         '欢迎',
         'https://sakuyark.com/static/images/icon.jpg',
         [('我就是测试',)],
