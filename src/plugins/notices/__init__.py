@@ -25,7 +25,7 @@ async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
     if data is None:
         msg = welcome_card(
             '欢迎上船',
-            'https://sakuyark.com/static/images/icon.jpg',
+            f'http://p.qlogo.cn/gh/{event.group_id}/{event.group_id}/0',
             [('请先查看置顶公告',)]
         )
     else:
@@ -38,7 +38,7 @@ async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
         elif type == 'card':
             msg = welcome_card(
                 data['text'],
-                data.get('icon'),
+                data.get('icon') or f'http://p.qlogo.cn/gh/{event.group_id}/{event.group_id}/0',
                 data.get('tips'),
                 data.get('buttons')
             )
