@@ -1,6 +1,7 @@
 
 import datetime
 import re
+import random
 import numpy as np
 import pandas as pd
 
@@ -27,6 +28,7 @@ class Msg:
         self.user_id = user_id
         self.id = event.message_id
         self.time = datetime.datetime.fromtimestamp(event.time)
+        self.extends = {}
         pass
 
     async def fisrt_seconds(self, seconds):
@@ -41,7 +43,8 @@ class Msg:
             'group_id': self.group_id,
             'user_id': self.user_id,
             'time': self.time,
-            'id': self.id
+            'id': self.id,
+            'extends': self.extends
         })
 
 
@@ -49,13 +52,13 @@ class Msg:
 async def _(bot: Bot, event: GroupMessageEvent):
     group_id, user_id = event.group_id, event.user_id
     this = Msg(group_id, user_id, event)
-    await this.save()
     user = User(str(group_id), str(user_id))
     user.update_from_event(event)
     # 扩展处理
-    await flood(bot, event, this, user)
-    await cards(bot, event, this, user)
-    await keyword_delete(bot, event, this, user)
+    extend_list = [flood, cards, keyword_delete]
+    for i in extend_list:
+        this = await i(bot, event, this, user) or this
+    await this.save()
 
 
 # 判定刷屏
@@ -84,7 +87,7 @@ async def cards(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
     })
     if data is None:
         return
-    if not re.search(data['reg'], user.card, re.I):
+    if not re.search(data['reg'], user.card, re.I) and random.randint(1, 4) == 1:
         await bot.send(event, ms.text('请修改名片，名片格式 ' + data['format']), at_sender=True)
 
 
