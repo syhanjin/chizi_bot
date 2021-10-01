@@ -1,6 +1,7 @@
 import os
 from typing import Union
 from PIL import Image, ImageDraw, ImageFont
+import nonebot
 
 
 class ImgDraw(object):
@@ -30,10 +31,14 @@ class ImgDraw(object):
     async def __putBorder(self, pos: 'tuple[int, int]', text: str, fill: 'tuple[int, int, int]') -> None:
         self.draw.text(pos, text, font=self.font, fill=fill)
 
-    async def openfont(self, path: str, fontsize: int = 16) -> None:
+    async def openfont(self, path: str = None, fontsize: int = 16) -> None:
+        if path is None:
+            path = self.__font
+        else:
+            self.__font = path
         if not os.path.exists(path):
             raise OSError('File is not exists')
-        self.__font = ImageFont.truetype(path, size=fontsize)
+        self.font = ImageFont.truetype(path, size=fontsize)
 
     async def putText(
         self,
@@ -62,7 +67,7 @@ class ImgDraw(object):
         if font is not None:
             await self.openfont(font, fontsize)
         else:
-            self.__font.size = fontsize
+            await self.openfont(fontsize=fontsize)
         if type(text) == type(()):
             tmp, text = text, ''
             for i in tmp:
@@ -123,9 +128,3 @@ class ImgDraw(object):
     def pos(self, pos: 'tuple[int, int]') -> None:
         self.x = pos[0]
         self.y = pos[1]
-
-    @property
-    def font(self) -> ImageFont.FreeTypeFont:
-        if self.__font is None:
-            raise NameError('has not opened a font')
-        return self.__font
