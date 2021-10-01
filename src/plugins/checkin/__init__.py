@@ -169,7 +169,7 @@ class Checkin(User):
         # endregion
         out_path = os.path.join(root_path, 'cards', self.now.__format__(
             '%Y%m%d%H%M%S')+str(random.randint(10, 99))+'.jpg')
-        img.save(out_path)
+        await img.save(out_path)
         return os.path.abspath(out_path)
 
     async def save(self):
@@ -199,7 +199,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     c.update_from_event(event)
     if not c.checkin():
         await bot.send(event, '你今天已经签过到了，明天再来吧~~', at_sender=True)
-        # return
+        return
     src = await c.generate_card()
     await c.save()
     await bot.send(event, ms.image('file://'+src), at_sender=True)
