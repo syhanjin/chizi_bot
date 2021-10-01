@@ -10,6 +10,7 @@ class ImgDraw(object):
     await obj.init()
     绘制时请调用 obj.draw
     """
+
     def __init__(self, path: str) -> None:
         self.path = path
         self.x = 0
@@ -61,7 +62,7 @@ class ImgDraw(object):
         if font is not None:
             await self.openfont(font, fontsize)
         else:
-            self.__font.size=fontsize
+            self.__font.size = fontsize
         if type(text) == type(()):
             tmp, text = text, ''
             for i in tmp:
@@ -84,14 +85,14 @@ class ImgDraw(object):
         if direction == 0:
             self.y += deviation[1] + 2*border + interval
         elif direction == 1:
-            self.x += deviation[0] + 2*border+ interval
+            self.x += deviation[0] + 2*border + interval
 
     def resize(
         self,
         size: 'tuple[int, int]',
-        resample: '_Resample | None' = ...,
-        box: 'tuple[float, float, float, float] | None' = ...,
-        reducing_gap: 'float | None' = ...,
+        resample: '_Resample | None' = None,
+        box: 'tuple[float, float, float, float] | None' = None,
+        reducing_gap: 'float | None' = None,
     ) -> None:
         """
         说明：
