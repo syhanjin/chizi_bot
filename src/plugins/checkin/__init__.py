@@ -117,8 +117,9 @@ class Checkin(User):
         # 分割线
         img.draw.line((img.x, img.y, img.x, 950), fill='#000', width=3)
         # 内容
-        img.pos += 50, 20
-        await img.putText(('当前好感度 :', self.favor), 1, 15, fontsize=48)
+        img.x += 50
+        img.y += 20
+        await img.putText(('当前好感度 :', self.favor), 0, 15, fontsize=48)
 
         dx, h = 15, 40
         img.draw.rectangle(
@@ -190,6 +191,7 @@ class Checkin(User):
 
 
 def rand(st, ed): return random.random()*(ed-st) + st
+
 
 @checkin.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
