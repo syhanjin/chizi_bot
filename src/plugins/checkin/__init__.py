@@ -199,7 +199,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     c.update_from_event(event)
     if not c.checkin():
         await bot.send(event, '你今天已经签过到了，明天再来吧~~', at_sender=True)
-        return
+        # return
     src = await c.generate_card()
     await c.save()
     await bot.send(event, ms.image('file://'+src), at_sender=True)

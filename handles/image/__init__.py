@@ -100,8 +100,7 @@ class ImgDraw(object):
             重置后会清空画布！！！
         """
         self.img = self.img.resize(size, resample, box, reducing_gap)
-        self.__draw = self.__draw.resize(size, resample, box, reducing_gap)
-        self.draw = ImageDraw.Draw(self.__draw)
+        self.__newDraw()
 
     def composite(self) -> None:
         """
