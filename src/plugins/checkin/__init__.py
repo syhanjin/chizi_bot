@@ -91,7 +91,7 @@ class Checkin(User):
             '.', 'res', 'checkin', 'fonts', 'LXGWWenKai-Regular.ttf'
         )
         img.draw.rectangle((0, 400, 1920, 1080), fill=(216, 216, 216, 216))
-        img.openfont(font)
+        await img.openfont(font)
 
         # region 输出用户名 && QQ && sakuyark
         img.pos = 40, 10
