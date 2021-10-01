@@ -71,15 +71,15 @@ class ImgDraw(object):
         if border > 0:
             # 文字阴影
             # thin border
-            self.__putBorder((self.x-border, self.y), text, borderFill)
-            self.__putBorder((self.x+border, self.y), text, borderFill)
-            self.__putBorder((self.x, self.y-border), text, borderFill)
-            self.__putBorder((self.x, self.y+border), text, borderFill)
+            await self.__putBorder((self.x-border, self.y), text, borderFill)
+            await self.__putBorder((self.x+border, self.y), text, borderFill)
+            await self.__putBorder((self.x, self.y-border), text, borderFill)
+            await self.__putBorder((self.x, self.y+border), text, borderFill)
             # thicker border
-            self.__putBorder((self.x-border, self.y-border), text, borderFill)
-            self.__putBorder((self.x+border, self.y-border), text, borderFill)
-            self.__putBorder((self.x-border, self.y+border), text, borderFill)
-            self.__putBorder((self.x+border, self.y+border), text, borderFill)
+            await self.__putBorder((self.x-border, self.y-border), text, borderFill)
+            await self.__putBorder((self.x+border, self.y-border), text, borderFill)
+            await self.__putBorder((self.x-border, self.y+border), text, borderFill)
+            await self.__putBorder((self.x+border, self.y+border), text, borderFill)
         self.draw.text((self.x, self.y), text, font=self.font, fill=fill)
         deviation = self.draw.textsize(text, font=self.font, spacing=0)
         if direction == 0:
