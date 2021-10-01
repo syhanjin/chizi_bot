@@ -63,7 +63,8 @@ class Checkin(User):
                         microseconds=self.last.microsecond
                     )
             ):
-                return False
+                # return False
+                pass
         # 今天凌晨
         zeroToday = self.now - datetime.timedelta(hours=self.now.hour, minutes=self.now.minute,
                                                   seconds=self.now.second, microseconds=self.now.microsecond)
