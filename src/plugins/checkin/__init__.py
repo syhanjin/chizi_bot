@@ -1,3 +1,4 @@
+from handles.image import ImgDraw
 from nonebot.adapters.cqhttp.event import GroupMessageEvent
 import pymongo
 import datetime
@@ -83,129 +84,92 @@ class Checkin(User):
         # 生成图片
         # region 随机背景
         bg = os.path.join(root_path, 'H', str(random.randint(1, 30))+'.jpg')
-        img = Image.open(bg)
-        img = img.resize((1920, 1080), Image.ANTIALIAS)
-        tmp = Image.new('RGBA', img.size, (0, 0, 0, 0))
-        # endregion
-        # region 构造画布
-        draw = ImageDraw.Draw(tmp)
-        fontpath = os.path.join('.', 'res', 'checkin', 'fonts',
-                                'LXGWWenKai-Regular.ttf')
-        draw.rectangle((0, 400, 1920, 1080), fill=(216, 216, 216, 216))
-        # endregion
+        img = ImgDraw(bg)
+        await img.init()
+        img.resize((1920, 1080), Image.ANTIALIAS)
+        font = os.path.join(
+            '.', 'res', 'checkin', 'fonts', 'LXGWWenKai-Regular.ttf'
+        )
+        img.draw.rectangle((0, 400, 1920, 1080), fill=(216, 216, 216, 216))
+        img.openfont(font)
 
         # region 输出用户名 && QQ && sakuyark
-        y = 10
-        y += (await putText(draw, 40, y, self.card, font=fontpath,
-                            fill=(255, 255, 255), fontsize=128, border=1.5))[1]
-        y += (await putText(draw, 40, y, ('QQ:', self.user_id), font=fontpath,
-                            fill=(255, 255, 255), fontsize=96, border=1.5))[1]
+        img.pos = 40, 10
+        await img.putText(self.card, 0, fill=(255, 255, 255), fontsize=128, border=1.5)
+        await img.putText(('QQ:', self.user_id), 0, fill=(255, 255, 255), fontsize=96, border=1.5)
         if self.user:
-            await putText(draw, 40, y, ('Sakuyark:', self.user), font=fontpath, fill=(
-                255, 255, 255), fontsize=96, border=1.5)
+            await img.putText(('Sakuyark:', self.user), 0, fill=(255, 255, 255), fontsize=96, border=1.5)
         # endregion
         # region 输出连签
-        x = 40
-        x += (await putText(draw, x, 430, u"Accumulative check-in for",
-                            font=fontpath, fontsize=60))[0]
-        x += 15
-        x += (await putText(
-            draw, x, 410, self.continuity,
-            font=fontpath, fill='#ff00ff', fontsize=80,
-            border=1, borderFill=(200, 0, 200)
-        ))[0]
-        x += 15
-        await putText(draw, x, 430, 'days',
-                      font=fontpath, fontsize=60)
+        img.pos = 40, 430
+        await img.putText(u"Accumulative check-in for", 1, 15, fontsize=60)
+        img.y = 410
+        await img.putText(self.continuity, 1, 15, fill='#ff00ff', fontsize=80, border=1, borderFill=(200, 0, 200))
+        img.y = 430
+        await img.putText('days', 1, fontsize=60)
         # endregion
-        # region 输出上次签到时间
-        '''
-        x = 1180
-        x += putText(draw, x, 430, u"上次签到", font=fontpath, fontsize=60)[0]
-        x += 30
-        putText(draw, x, 430, last.__format__('%Y-%m-%d') if(last)
-                else '无', font=fontpath, fontsize=60, fill=(216, 64, 64))
-        '''
-        # endregion
-
         # region 左侧 头像
 
         # endregion
-
         # region 中间 当前信息
-        x, y = 400, 600
+        img.pos = 400, 600
         # 分割线
-        draw.line((x, y, x, 950), fill='#000', width=3)
+        img.draw.line((img.x, img.y, img.x, 950), fill='#000', width=3)
         # 内容
-        x += 50
-        y += 20
-        y += (await putText(draw, x, y, ('当前好感度 :',
-                                         self.favor), font=fontpath, fontsize=48))[1]
-        y += 15
+        img.pos += 50, 20
+        await img.putText(('当前好感度 :', self.favor), 1, 15, fontsize=48)
+
         dx, h = 15, 40
-        draw.rectangle((x + dx, y, x + dx + 360, y + h), fill='#fff')
-        draw.ellipse((x + dx + 340, y, x + dx+380, y + h), fill='#fff')
+        img.draw.rectangle(
+            (img.x + dx, img.y, img.x + dx + 360, img.y + h), fill='#fff'
+        )
+        img.draw.ellipse(
+            (img.x + dx + 340, img.y, img.x + dx+380, img.y + h), fill='#fff'
+        )
         w = self.favor / self.fav_max * 340 + 40
-        draw.rectangle((x + dx, y, x + dx + w - 20, y + h), fill='#f0f')
-        draw.ellipse((x + dx + w - 40, y, x + dx + w, y + h), fill='#f0f')
-        y += h+15
-        y += (await putText(
-            draw, x, y,
-            ('· 与', NAME, '的关系 :', self.label),
-            font=fontpath, fontsize=36
-        ))[1]
-        y += (await putText(
-            draw, x, y,
-            ('· ', NAME, '对你的态度 :', self.attitude),
-            font=fontpath, fontsize=36
-        ))[1]
-        y += (await putText(
-            draw, x, y,
-            ('· 关系提升还需要:', self.fav_max - self.favor, '好感度'),
-            font=fontpath, fontsize=36
-        ))[1]
-        y += 15
-        y += (await putText(
-            draw, x, y,
-            ('时间: ', self.now.__format__('%Y-%m-%d %a %H:%M')),
-            font=fontpath, fontsize=48
-        ))[1]
+        img.draw.rectangle(
+            (img.x + dx, img.y, img.x + dx + w - 20, img.y + h), fill='#f0f'
+        )
+        img.draw.ellipse(
+            (img.x + dx + w - 40, img.y, img.x + dx + w, img.y + h), fill='#f0f'
+        )
+        img.y += h+15
+        await img.putText(
+            ('· 与', NAME, '的关系 :', self.label), 0, fontsize=36
+        )
+        await img.putText(
+            ('· ', NAME, '对你的态度 :', self.attitude), 0, fontsize=36
+        )
+        await img.putText(
+            ('· 关系提升还需要:', round(self.fav_max - self.favor, 2), '好感度'), 0, 15, fontsize=36
+        )
+        await img.putText(
+            ('时间: ', self.now.__format__('%Y-%m-%d %a %H:%M')), 0, fontsize=48
+        )
         # endregion
-
         # region 右侧 今日签到信息 全部信息
-        x, y = 1150, 430
-        y += (await putText(draw, x, y, '今日签到', font=fontpath, fontsize=72))[1]
-        x += 50
-        y += 15
-        txy = await putText(draw, x, y, '好感度', font=fontpath, fontsize=60)
-        await putText(draw, x + 350, y, ('+', self.today_favor),
-                      font=fontpath, fontsize=60, fill=(128, 64, 64))
-        y += txy[1]
-        y += 15
-        txy = await putText(draw, x, y, '金币', font=fontpath, fontsize=60)
-        await putText(draw, x + 350, y, ('+', str(self.today_coin)),
-                      font=fontpath, fontsize=60, fill=(128, 64, 64))
-        y += txy[1] + 60
-        y += (await putText(draw, x, y,
-                            ('金币总数:', self.coin), font=fontpath, fontsize=60))[1]
+        img.pos = 1150, 430
+        await img.putText('今日签到', 0, 15, fontsize=72)
+        img.x += 50
+        await img.putText('好感度', -1, fontsize=60)
+        img.x += 350
+        await img.putText(('+', self.today_favor), 0, 15, fontsize=60, fill=(128, 64, 64))
+        await img.putText(('+', str(self.today_coin)), -1, fontsize=60, fill=(128, 64, 64))
+        img.x -= 350
+        await img.putText('金币', 0, 60, fontsize=60)
+        await img.putText(('金币总数:', self.coin), fontsize=60)
         # endregion
-
         # region 输出水印
-        await putText(draw, 1750, 20, self.now.__format__('%m/%d'),
-                      font=fontpath, fill=(255, 255, 255), fontsize=48,
-                      border=1
-                      )
-        await putText(draw, 1600, 1020, 'Sakuyark@2021',
-                      font=fontpath, fill=(128, 128, 128), fontsize=36)
+        img.pos = 1750, 20
+        await img.putText(
+            self.now.__format__('%m/%d'), fill=(255, 255, 255), fontsize=48, border=1
+        )
+        img.pos = 1600, 1020
+        await img.putText('Sakuyark@2021', fill=(128, 128, 128), fontsize=36)
         # endregion
-
-        # region 合成并保存
-        img = Image.alpha_composite(img.convert('RGBA'), tmp)
-        img = img.convert("RGB")
         out_path = os.path.join(root_path, 'cards', self.now.__format__(
             '%Y%m%d%H%M%S')+str(random.randint(10, 99))+'.jpg')
         img.save(out_path)
-        # endregion
         return os.path.abspath(out_path)
 
     async def save(self):
@@ -225,31 +189,6 @@ class Checkin(User):
 
 
 def rand(st, ed): return random.random()*(ed-st) + st
-
-
-async def putText(draw, x, y, text: 'str | tuple', font='微软雅黑', fontsize=16, fill=(0, 0, 0), border=0, borderFill=(0, 0, 0)):
-    font = ImageFont.truetype(font, size=fontsize)
-    if type(text) == type(()):
-        tmp = text
-        text = ''
-        for i in tmp:
-            text += str(i) + ' '
-    text = str(text)
-    if border > 0:
-        # 文字阴影
-        # thin border
-        draw.text((x-border, y), text, font=font, fill=borderFill)
-        draw.text((x+border, y), text, font=font, fill=borderFill)
-        draw.text((x, y-border), text, font=font, fill=borderFill)
-        draw.text((x, y+border), text, font=font, fill=borderFill)
-        # thicker border
-        draw.text((x-border, y-border), text, font=font, fill=borderFill)
-        draw.text((x+border, y-border), text, font=font, fill=borderFill)
-        draw.text((x-border, y+border), text, font=font, fill=borderFill)
-        draw.text((x+border, y+border), text, font=font, fill=borderFill)
-    draw.text((x, y), text, font=font, fill=fill)
-    return draw.textsize(text, font=font, spacing=0)
-
 
 @checkin.handle()
 async def _(bot: Bot, event: GroupMessageEvent):

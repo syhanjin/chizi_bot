@@ -1,33 +1,44 @@
 
+from genericpath import exists
+from io import TextIOWrapper
+import os
+from re import template
+from typing import Union
 from nonebot.adapters.cqhttp.message import MessageSegment as ms
 
 
-def welcome_card(text: str, icon: str = '', tips: list = [], buttons: list = []):
+def welcome_card(
+    text: str, icon: str = '', tips: Union[list, tuple, str] = [], buttons: list = []
+) -> ms:
     '''
-    text: str, 欢迎语
-
-    icon: str, 图标的网址
-
-    tips: list, 元素为一个 元组: (text, [title])
-    - text: 提示文本, 标题默认为 温馨提示
-    - title: 当添加该值且不为空，则标题将被覆盖
-
-    buttons: list，元素为一个 元组: (name, action)
-    - name:   按钮内容
-    - action: 按钮所需跳转的网址
-
-    **请注意在单元素元组中添加`,`以消除歧义**
+    说明：
+        生成一张欢迎卡片格式的 MessageSegment.json 消息
+    参数：
+        :param *text: 欢迎语
+        :param icon: 图标的网址，若无则使用群头像
+        :param tips: 卡片中的提示信息，若不为list则自动在外层包裹list
+            :element tuple: (text, title)
+                :element text: 提示文本, 标题默认为 `温馨提示`
+                :element title: 当添加该值且不为空，则标题将被覆盖
+            :element str: 提示文本，标题为 温馨提示
+        :param buttons: 卡片中的按钮，若不为list则自动在外层包裹list
+            :element tuple: (name, action)
+                :element name:   按钮内容
+                :element action: 按钮所需跳转的网址
     '''
     proc_tips, proc_btns = [], []
     if tips:
         for i in tips:
             title = '温馨提示'
-            try:
-                title = i[1] or title
-            except:
-                pass
+            text = i
+            if isinstance(i, tuple):
+                try:
+                    title = i[1] or title
+                    text = i[0]
+                except:
+                    pass
             proc_tips.append({
-                'value': i[0],
+                'value': text,
                 'title': title
             })
     if buttons:
@@ -57,3 +68,57 @@ def welcome_card(text: str, icon: str = '', tips: list = [], buttons: list = [])
             }
         }
     })
+
+
+def image(
+    path: str = None, b64: str = None
+) -> ms:
+    """
+    说明：
+        生成 MessageSegment.image 消息
+        处理顺序 path > b64
+    参数:
+        :param path: 图片路径
+        :param b64: 图片base64
+    """
+    if path:
+        return (
+            ms.image("file:///" + os.path.abspath(path))
+            if os.path.exists(path)
+            else ""
+        )
+    elif b64:
+        return ms.image(b64 if "base64://" in b64 else "base64://" + b64)
+    else:
+        return ""
+
+
+def at(qq: Union[int, str]) -> ms:
+    """
+    说明：
+        生成一个 MessageSegment.at 消息
+    参数：
+        :param qq: qq号
+    """
+    return ms.at(qq)
+
+
+def text(msg: str) -> ms:
+    """
+    说明：
+        生成一个 MessageSegment.text 消息
+    参数：
+        :param msg: 消息文本
+    """
+    return ms.text(msg)
+
+
+def face(id_: int) -> ms:
+    """
+    说明：
+        生成一个 MessageSegment.face 消息
+    参数：
+        :param id_: 表情id
+    """
+    return ms.face(id_)
+

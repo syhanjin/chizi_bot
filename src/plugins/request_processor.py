@@ -12,5 +12,5 @@ friend_request = on_request(priority=1, block=False)
 
 
 @friend_request.handle()
-def _fr(bot: Bot, event: FriendRequestEvent):
+def _(bot: Bot, event: FriendRequestEvent):
     bot.call_api('set_friend_add_request', flag=event.flag, approve=True)
