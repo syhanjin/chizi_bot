@@ -10,6 +10,9 @@ from handles.message_builder import welcome_card
 t1 = on_command(
     'test1', permission=PRIVATE, priority=1, block=False
 )
+t2 = on_command(
+    'test2', priority=1, block=False
+)
 
 
 @t1.handle()
@@ -21,9 +24,6 @@ async def _(bot: Bot, event: PrivateMessageEvent):
         [('Sakuyark', 'https://sakuyark.com')]
     ))
 
-t2 = on_command(
-    'test2', permission=GROUP | PRIVATE, priority=1, block=False
-)
 @t2.handle()
 async def _(bot: Bot, event: MessageEvent):
     await bot.send(event, ms.xml(
