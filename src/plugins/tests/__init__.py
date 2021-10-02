@@ -24,8 +24,12 @@ async def _(bot: Bot, event: PrivateMessageEvent):
         [('Sakuyark', 'https://sakuyark.com')]
     ))
 
+
 @t2.handle()
 async def _(bot: Bot, event: MessageEvent):
     await bot.send(event, ms.xml(
-        """<?xml version='1.0' encoding='UTF-8' ?><msg serviceID="104" templateID="1" brief="大家好，我是丙实。金牛座男一枚~"><item layout="2"><picture cover="" /><title>新人入群</title></item><source /></msg>"""
+        {
+            'data': """<?xml version='1.0' encoding='UTF-8' ?><msg serviceID="104" templateID="1" brief="大家好，我是丙实。金牛座男一枚~"><item layout="2"><picture cover="" /><title>新人入群</title></item><source /></msg>""",
+            'resid': 104
+        }
     ))
