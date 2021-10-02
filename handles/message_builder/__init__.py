@@ -7,6 +7,11 @@ from typing import Union
 from nonebot.adapters.cqhttp.message import MessageSegment as ms
 
 
+'''
+ "大家好，我是丙实。金牛座男一枚~[CQ:xml,data=<?xml version='1.0' encoding='UTF-8' ?><msg serviceID="104" templateID="1" brief="大家好，我是丙实。金牛座男一枚~"><item layout="2"><picture cover="" /><title>新人入群</title></item><source /></msg>,resid=104]"
+'''
+
+
 def welcome_card(
     text: str, icon: str = '', tips: Union[list, tuple, str] = [], buttons: list = []
 ) -> ms:
@@ -58,7 +63,7 @@ def welcome_card(
                 "appInfo": {
                     "appName": text,
                     "appType": 4,
-                    "appid": 1234567890,
+                    "appid": 0,
                     "iconUrl": icon
                 },
                 "data": proc_tips,
