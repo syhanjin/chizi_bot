@@ -35,15 +35,15 @@ def welcome_card(
     if tips:
         for i in tips:
             title = '温馨提示'
-            text = i
-            if isinstance(i, tuple):
+            value = i
+            if type(i) == type(()):
                 try:
                     title = i[1] or title
-                    text = i[0]
+                    value = i[0]
                 except:
                     pass
             proc_tips.append({
-                'value': text,
+                'value': value,
                 'title': title
             })
     if buttons:
