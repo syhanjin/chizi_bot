@@ -52,7 +52,7 @@ def welcome_card(
                 'name': i[0],
                 'action': i[1]
             })
-    return ms.json({
+    return str({
         "app": "com.tencent.miniapp",
         "desc": "",
         "view": "notification",
