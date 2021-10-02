@@ -13,7 +13,10 @@ from nonebot.adapters.cqhttp.message import MessageSegment as ms
 
 
 def welcome_card(
-    text: str, icon: str = '', tips: 'list[tuple[str, (str)] | list[str, (str)]] | tuple[str, (str)] | str' = [], buttons: list = []
+    text: str,
+    icon: str = '',
+    tips: 'list[tuple[str, str] | list[str, str]] | tuple[str, str] | str' = [],
+    buttons: 'list[tuple[str, str] | list[str, str]] | tuple[str, str]' = []
 ) -> ms:
     '''
     说明：
@@ -22,13 +25,13 @@ def welcome_card(
         :param *text: 欢迎语
         :param icon: 图标的网址，若无则使用群头像
         :param tips: 卡片中的提示信息，若不为list则自动在外层包裹list
-            :element tuple: (text, title)
+            :element tuple | list: [text, title]
                 :element text: 提示文本, 标题默认为 `温馨提示`
                 :element title: 当添加该值且不为空，则标题将被覆盖
             :element str: 提示文本，标题为 温馨提示
         :param buttons: 卡片中的按钮，若不为list则自动在外层包裹list
-            :element tuple: (name, action)
-                :element name:   按钮内容
+            :element tuple: [name, action]
+                :element name: 按钮内容
                 :element action: 按钮所需跳转的网址
     '''
     proc_tips, proc_btns = [], []
@@ -126,4 +129,3 @@ def face(id_: int) -> ms:
         :param id_: 表情id
     """
     return ms.face(id_)
-
