@@ -13,7 +13,7 @@ from nonebot.adapters.cqhttp.message import MessageSegment as ms
 
 
 def welcome_card(
-    text: str, icon: str = '', tips: Union[list, tuple, str] = [], buttons: list = []
+    text: str, icon: str = '', tips: 'list[tuple[str, (str)] | list[str, (str)]] | tuple[str, (str)] | str' = [], buttons: list = []
 ) -> ms:
     '''
     说明：
@@ -36,7 +36,7 @@ def welcome_card(
         for i in tips:
             title = '温馨提示'
             value = i
-            if type(i) == type(()):
+            if type(i) == type(()) or type(i) == type([]):
                 try:
                     title = i[1] or title
                     value = i[0]
