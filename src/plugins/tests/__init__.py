@@ -10,9 +10,9 @@ from handles.message_builder import welcome_card
 t1 = on_command(
     'test1', permission=PRIVATE, priority=1, block=False
 )
-t2 = on_command(
-    'test2', priority=1, block=False
-)
+# t2 = on_command(
+#     'test2', priority=1, block=False
+# )
 
 
 @t1.handle()
@@ -25,11 +25,11 @@ async def _(bot: Bot, event: PrivateMessageEvent):
     ))
 
 
-@t2.handle()
-async def _(bot: Bot, event: MessageEvent):
-    await bot.send(event, ms.xml(
-        {
-            'data': """<?xml version='1.0' encoding='UTF-8' ?><msg serviceID="104" templateID="1" brief="大家好，我是丙实。金牛座男一枚~"><item layout="2"><picture cover="" /><title>新人入群</title></item><source /></msg>""",
-            'resid': 104
-        }
-    ))
+# @t2.handle()
+# async def _(bot: Bot, event: MessageEvent):
+#     await bot.send(event, ms.xml(
+#         {
+#             'data': """<?xml version='1.0' encoding='UTF-8' ?><msg serviceID="104" templateID="1" brief="大家好，我是丙实。金牛座男一枚~"><item layout="2"><picture cover="" /><title>新人入群</title></item><source /></msg>""",
+#             'resid': 104
+#         }
+#     ))
