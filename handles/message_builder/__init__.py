@@ -37,9 +37,9 @@ def welcome_card(
             title = '温馨提示'
             value = i
             if type(i) == type(()) or type(i) == type([]):
+                value = i[0]
                 try:
                     title = i[1] or title
-                    value = i[0]
                 except:
                     pass
             proc_tips.append({
@@ -52,7 +52,7 @@ def welcome_card(
                 'name': i[0],
                 'action': i[1]
             })
-    return str({
+    return ms.json({
         "app": "com.tencent.miniapp",
         "desc": "",
         "view": "notification",
