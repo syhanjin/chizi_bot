@@ -31,7 +31,7 @@ async def _(bot: Bot, event: GroupRequestEvent):
             )
             await bot.send(
                 event,
-                introduction(f'我是{NAME}, 一个可爱的机器人，来自Sakuyark')
+                f'我是{NAME}, 一个可爱的机器人，来自Sakuyark'
             )
         else:
             await bot.call_api(
