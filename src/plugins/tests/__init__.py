@@ -1,5 +1,6 @@
 
 from nonebot import on_command
+import nonebot
 from nonebot.adapters.cqhttp.event import MessageEvent, PrivateMessageEvent
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.typing import T_State
