@@ -1,9 +1,7 @@
 
-from genericpath import exists
-from io import TextIOWrapper
 import os
-from re import template
 from typing import Union
+import nonebot
 from nonebot.adapters.cqhttp.message import MessageSegment as ms
 
 NAME = list(nonebot.get_driver().config.nickname)[0]
