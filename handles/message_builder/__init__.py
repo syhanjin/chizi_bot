@@ -6,10 +6,25 @@ from re import template
 from typing import Union
 from nonebot.adapters.cqhttp.message import MessageSegment as ms
 
+NAME = list(nonebot.get_driver().config.nickname)[0]
 
 '''
  "大家好，我是丙实。金牛座男一枚~[CQ:xml,data=<?xml version='1.0' encoding='UTF-8' ?><msg serviceID="104" templateID="1" brief="大家好，我是丙实。金牛座男一枚~"><item layout="2"><picture cover="" /><title>新人入群</title></item><source /></msg>,resid=104]"
 '''
+
+
+def introduction(
+    text: str
+) -> ms:
+    """
+    说明：
+        生成一张入群介绍格式的 MessageSegment.text + MessageSegment.xml 消息
+    参数：
+        :param *text: 介绍内容
+    """
+    return ms.text(text) + ms.xml(
+        f"""<?xml version='1.0' encoding='UTF-8' ?><msg serviceID="104" templateID="1" brief="{text}"><item layout="2"><picture cover="" /><title>{NAME} 来到了这里</title></item><source /></msg>"""
+    )
 
 
 def welcome_card(
