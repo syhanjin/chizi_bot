@@ -19,6 +19,7 @@ group_request = on_request(priority=1,block=True)
 @friend_request.handle()
 async def _(bot: Bot, event: FriendRequestEvent):
     await bot.call_api('set_friend_add_request', flag=event.flag, approve=True)
+    await bot.send(event, f'我是{NAME}，很高兴为您服务！')
 
 @group_request.handle()
 async def _(bot: Bot, event: GroupRequestEvent):
@@ -31,7 +32,7 @@ async def _(bot: Bot, event: GroupRequestEvent):
             )
             await bot.send(
                 event,
-                f'我是{NAME}, 一个可爱的机器人，来自Sakuyark'
+                f'我是{NAME}, 来自Sakuyark'
             )
         else:
             await bot.call_api(

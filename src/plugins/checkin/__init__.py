@@ -140,7 +140,7 @@ class Checkin(User):
             ('· 与', NAME, '的关系 :', self.label), 0, fontsize=36
         )
         await img.putText(
-            ('· ', NAME, '对你的态度 :', self.attitude), 0, fontsize=36
+            ('·', NAME, '对你的态度 :', self.attitude), 0, fontsize=36
         )
         await img.putText(
             ('· 关系提升还需要:', round(self.fav_max - self.favor, 2), '好感度'), 0, 15, fontsize=36

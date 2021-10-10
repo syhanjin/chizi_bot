@@ -89,6 +89,8 @@ class Draw(object):
         self.y = pos[1]
 
 
+# 这个东西好像有点怪怪的，先关掉？
+'''
 class TextDraw(Draw):
     """
     将文本生成为图片
@@ -170,7 +172,7 @@ class TextDraw(Draw):
             img.alpha_composite(layer)
         img.convert('RGB')
         img.save(path)
-
+'''
 
 class ImgDraw(Draw):
     """

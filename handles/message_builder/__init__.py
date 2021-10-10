@@ -9,12 +9,13 @@ from handles import NAME
  "大家好，我是丙实。金牛座男一枚~[CQ:xml,data=<?xml version='1.0' encoding='UTF-8' ?><msg serviceID="104" templateID="1" brief="大家好，我是丙实。金牛座男一枚~"><item layout="2"><picture cover="" /><title>新人入群</title></item><source /></msg>,resid=104]"
 '''
 
-
+'''
 def text_to_image(
     texts: 'list[dict]',
     bg: 'str | tuple[int, int, int, int]' = (0, 0, 0, 0)
 ) -> ms:
     pass
+'''
 
 
 def introduction(
