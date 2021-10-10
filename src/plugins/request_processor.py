@@ -8,10 +8,10 @@ from nonebot import on_request
 from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.message import MessageSegment as ms
 from nonebot.adapters.cqhttp.permission import GROUP
+from handles import NAME
 
 from handles.message_builder import introduction
 
-NAME = list(nonebot.get_driver().config.nickname)[0]
 friend_request = on_request(priority=1, block=True)
 group_request = on_request(priority=1,block=True)
 

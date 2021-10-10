@@ -3,6 +3,7 @@ from nonebot.adapters.cqhttp.event import GroupMessageEvent
 import pymongo
 import datetime
 from handles.group import User, make_query
+from handles import NAME
 import os
 import json
 import random
@@ -24,7 +25,6 @@ db = client['qbot']
 userdb = client['user']
 # -- ------ --
 
-NAME = list(nonebot.get_driver().config.nickname)[0]
 root_path = os.path.join('.', 'res', 'checkin')
 card_ratio = 16 / 9
 
