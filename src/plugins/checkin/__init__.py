@@ -195,7 +195,6 @@ def rand(st, ed): return random.random()*(ed-st) + st
 
 @checkin.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
-    msg = json.loads(event.json())
     group_id = str(event.group_id)
     user_id = str(event.user_id)
     c = Checkin(group_id, user_id)
@@ -206,3 +205,4 @@ async def _(bot: Bot, event: GroupMessageEvent):
     src = await c.generate_card()
     await c.save()
     await bot.send(event, ms.image('file://'+src), at_sender=True)
+

@@ -4,13 +4,20 @@ import datetime
 from bs4 import BeautifulSoup
 
 import nonebot
-from nonebot.plugin import on_command
+from nonebot.adapters.cqhttp.bot import Bot
+from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent
+from nonebot.plugin import on_command, on_regex
 from nonebot.rule import to_me
 
 
-ft = on_command(
-    '算卦', rule=to_me
+ft = on_regex(
+    '.*(算.?{2}[命卦] | 卜.?{2}卦)', rule=to_me
 )
+
+@ft.handle()
+async def _(bot: Bot, event: MessageEvent):
+    if isinstance(event, GroupMessageEvent):
+        await bot.send(event, event.raw_message)
 
 def is_all_zh(s):
     for c in s:

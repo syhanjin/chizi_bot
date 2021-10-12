@@ -40,7 +40,7 @@ def welcome_card(
 ) -> ms:
     '''
     说明：
-        生成一张欢迎卡片格式的 MessageSegment.json 消息
+        生成一条欢迎卡片格式的 MessageSegment.json 消息
     参数：
         :param *text: 欢迎语
         :param icon: 图标的网址，若无则使用群头像

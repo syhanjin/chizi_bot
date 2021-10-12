@@ -18,6 +18,7 @@ class User:
         if data == None:
             data = {}
 
+        # 我觉得吧，这样子打得少一点
         def _(k, v): return data[k] if(k in data) else v
         self.favor = _('favor', 0)
         self.favorLvl = _('favorLvl', 0)
@@ -36,7 +37,7 @@ class User:
         self.dfav = fav['fav']
         user = userdb.userdata.find_one({'qq': user_id})
         self.user = None
-        if user != None:
+        if user is not None:
             self.user = user['user']
         if admin != None:
             self.admin = admin['admin']
