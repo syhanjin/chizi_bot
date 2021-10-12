@@ -11,7 +11,7 @@ from nonebot.rule import to_me
 
 
 ft = on_regex(
-    '.*(算.?{2}[命卦] | 卜.?{2}卦)', rule=to_me
+    '.*(算.{0,2}[命卦]|卜.{0,2}卦).*', rule=to_me
 )
 
 @ft.handle()
