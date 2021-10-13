@@ -70,7 +70,7 @@ async def _(bot: Bot, event: GroupMessageEvent, state: T_State):
         await bot.send(event, random.choice(replies['group']['allow']))
     else:
         state['allow'] = None
-        await ft.reject(event, random.choice(replies['group']['not understand']))
+        await ft.reject(random.choice(replies['group']['not understand']))
 
 
 def is_all_zh(s):
