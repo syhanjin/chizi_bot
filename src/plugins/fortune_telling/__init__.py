@@ -1,3 +1,4 @@
+import random
 import re
 import aiohttp
 import datetime
@@ -5,19 +6,72 @@ from bs4 import BeautifulSoup
 
 import nonebot
 from nonebot.adapters.cqhttp.bot import Bot
-from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent
+from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent, PrivateMessageEvent
 from nonebot.plugin import on_command, on_regex
 from nonebot.rule import to_me
+from nonebot.typing import T_State
+
+from handles.message_builder import face, text
 
 
 ft = on_regex(
     '.*(算.{0,2}[命卦]|卜.{0,2}卦).*', rule=to_me()
 )
 
+replies = {
+    'group': {
+        'beginning': [
+            text('乐意至极，但您真的要在这大庭广众之下做这种事情？')
+            + face(0)
+            + text('万一算出什么不好的东西怎么办...')
+            + face(13),
+
+        ],
+        'cancel': [
+            text('好吧好吧，如果你还是想算，可以悄悄的来找我哦')
+            + face(20) + face(20)
+        ],
+        'allow': [
+            text('好吧，那我们开始吧！')
+        ],
+        'not understand': [
+            face(32)
+            + text('你在说什么呐，我怎么听不懂呢？')
+        ]
+    }
+}
+msg_false = ['不', '否']
+msg_true = ['确定', '当然', '没错', '没关系', '可以', '是']
+
+
+def has(text, words):
+    for i in words:
+        if i in text:
+            return True
+    return False
+
+
 @ft.handle()
-async def _(bot: Bot, event: MessageEvent):
+async def _(bot: Bot, event: MessageEvent, state: T_State):
     if isinstance(event, GroupMessageEvent):
-        await bot.send(event, event.raw_message)
+        await bot.send(
+            event, random.choice(replies['group']['beginning'])
+        )
+    elif isinstance(event, PrivateMessageEvent):
+        state['allow'] = True
+
+
+@ft.got('allow')
+async def _(bot: Bot, event: GroupMessageEvent, state: T_State):
+    if has(event.raw_message, msg_false):
+        await ft.finish(random.choice(replies['group']['cancel']))
+    elif has(event.raw_message, msg_true):
+        state['allow'] = True
+        await bot.send(event, random.choice(replies['group']['allow']))
+    else:
+        state['allow'] = None
+        await bot.send(event, random.choice(replies['group']['not understand']))
+
 
 def is_all_zh(s):
     for c in s:
@@ -78,7 +132,7 @@ async def fortuneTelling(
             - y list    月 |
             - r list    日 | => [标题, 文本]
             - s list    时 |
-        
+
     参数：
         :param ln: Lastname 姓，汉字
         :param fn: Firstname 名，汉字
@@ -287,5 +341,3 @@ async def fortuneTelling(
     )
     # endregion
     return result
-
-
