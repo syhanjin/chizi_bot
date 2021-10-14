@@ -1,3 +1,4 @@
+import asyncio
 import random
 import re
 import aiohttp
@@ -17,60 +18,6 @@ from handles.message_builder import face, text
 ft = on_regex(
     '.*(算.{0,2}[命卦]|卜.{0,2}卦).*', rule=to_me()
 )
-
-replies = {
-    'group': {
-        'beginning': [
-            text('乐意至极，但您真的要在这大庭广众之下做这种事情？')
-            + face(0)
-            + text('万一算出什么不好的东西怎么办...')
-            + face(13),
-
-        ],
-        'cancel': [
-            text('好吧好吧，如果你还是想算，可以悄悄的来找我哦')
-            + face(20) + face(20)
-        ],
-        'allow': [
-            text('好吧，那我们开始吧！')
-        ],
-        'not understand': [
-            face(32)
-            + text('你在说什么呐，我怎么听不懂呢？')
-        ]
-    }
-}
-msg_false = ['不', '否']
-msg_true = ['确定', '当然', '没错', '没关系', '可以', '是']
-
-
-def has(text, words):
-    for i in words:
-        if i in text:
-            return True
-    return False
-
-
-@ft.handle()
-async def _(bot: Bot, event: MessageEvent, state: T_State):
-    if isinstance(event, GroupMessageEvent):
-        await bot.send(
-            event, random.choice(replies['group']['beginning'])
-        )
-    elif isinstance(event, PrivateMessageEvent):
-        state['allow'] = True
-
-
-@ft.got('allow')
-async def _(bot: Bot, event: GroupMessageEvent, state: T_State):
-    if has(event.raw_message, msg_false):
-        await ft.finish(random.choice(replies['group']['cancel']))
-    elif has(event.raw_message, msg_true):
-        state['allow'] = True
-        await bot.send(event, random.choice(replies['group']['allow']))
-    else:
-        state['allow'] = None
-        await ft.reject(random.choice(replies['group']['not understand']))
 
 
 def is_all_zh(s):
@@ -341,3 +288,197 @@ async def fortuneTelling(
     )
     # endregion
     return result
+
+
+replies = {
+    'group': {
+        'beginning': [
+            text('乐意至极，但您真的要在这大庭广众之下做这种事情？')
+            + face(0)
+            + text('万一算出什么不好的东西怎么办...')
+            + face(13),
+
+        ],
+        'cancel': [
+            text('好吧好吧，如果你还是想算，可以悄悄的来找我哦')
+            + face(20) + face(20)
+        ],
+        'allow': [
+            '好吧，那我们开始吧！'
+        ]
+    },
+    'not understand': [
+        face(32)
+        + text('您在说什么呐，我怎么听不懂呢？')
+    ],
+    'ln': [
+        '您贵姓？',
+    ],
+    'wrong ln': [
+        '请认真一点，这明显就不是一个姓氏！',
+        '请不要在这件事上开玩笑！'
+    ],
+    'fn': [
+        '您的名字是什么？不要包括姓氏'
+    ],
+    'wrong fn': [
+        '请认真一点，这明显就不是您的名！',
+        '请不要在这件事上开玩笑！'
+    ],
+    'sex': [
+        '您的性别是？'
+    ],
+    'wrong sex': [
+        '不要开玩笑了！您到底是男是女？'
+    ],
+    'birthday': [
+        '请问您是哪一天出生的？公历哦'
+    ],
+    'wrong birthday': [
+        '我无法理解您的生日，请再说一次'
+    ],
+    'btime': [
+        '请问您是{:%Y-%m-%d}几点几分出生的？可以只精确到小时'
+    ],
+    'wrong btime': [
+        '您...这时间不太对啊，请认真一点！'
+    ],
+    'bt': [
+        '好，下一个。您的血型是什么，如果不知道的话请跟我说「不知道」'
+    ],
+    'wrong bt': [
+        '您这，有点不对啊！我所知道的血型只有 A, B, O, AB 四种，您是哪一种？'
+    ],
+    'confirm': [
+        '''请确认您的数据：
+姓：「{0}」
+名：「{1}」
+性别：「{2}」
+生日：「{:%Y-%m-%d %H:%M}」
+血型：「{4}」
+        '''
+    ]
+}
+msg_false = ['不', '否']
+msg_true = ['确定', '当然', '没错', '没关系', '可以', '是']
+
+
+def has(text, words):
+    for i in words:
+        if i in text:
+            return True
+    return False
+
+
+@ft.handle()
+async def _(bot: Bot, event: MessageEvent, state: T_State):
+    if isinstance(event, GroupMessageEvent):
+        await bot.send(
+            event, random.choice(replies['group']['beginning'])
+        )
+    elif isinstance(event, PrivateMessageEvent):
+        state['allow'] = True
+
+
+@ft.got('allow')
+async def _(bot: Bot, event: GroupMessageEvent, state: T_State):
+    if has(event.raw_message, msg_false):
+        await ft.finish(random.choice(replies['group']['cancel']))
+    elif has(event.raw_message, msg_true):
+        state['allow'] = True
+        await bot.send(event, random.choice(replies['group']['allow']))
+        asyncio.sleep(1)
+        await bot.send(event, random.choice(replies['ln']))
+    else:
+        state['allow'] = None
+        await ft.reject(random.choice(replies['not understand']))
+
+
+@ft.got('ln')
+async def _(bot: Bot, event: MessageEvent, state: T_State):
+    ln = state['ln']
+    if not is_all_zh(ln) or 0 == len(ln) or len(ln) > 2:
+        await ft.reject(random.choice(replies['wrong ln']))
+    else:
+        await bot.send(event, random.choice(replies['fn']))
+
+
+@ft.got('fn')
+async def _(bot: Bot, event: MessageEvent, state: T_State):
+    fn = state['fn']
+    if not is_all_zh(fn) or 0 == len(fn) or len(fn) > 3:
+        await ft.reject(random.choice())
+    else:
+        await bot.send(event, random.choice(replies['sex']))
+
+
+@ft.got('sex')
+async def _(bot: Bot, event: MessageEvent, state: T_State):
+    sex = state['sex']
+    if sex == '男':
+        state['sex'] = 1
+    elif sex == '女':
+        state['sex'] = 2
+    else:
+        await ft.reject(random.choice(replies['wrong sex']))
+        return
+    await bot.send(event, random.choice(replies['birthday']))
+
+
+@ft.got('birthday')
+async def _(bot: Bot, event: MessageEvent, state: T_State):
+    birthday = state['birthday']
+    rb = re.match('(\d{4})[-./年](\d{1,2})[-./月](\d{1,2})', birthday)
+    if rb is None:
+        await ft.reject(random.choice(replies['wrong birthday']))
+    else:
+        state['year'] = int(rb.group(1))
+        state['month'] = int(rb.group(2))
+        state['day'] = int(rb.group(3))
+    await bot.send(
+        event, random.choice(
+            replies['btime']
+        ).format(
+            datetime.datetime(state['year'], state['month'], state['day'])
+        )
+    )
+
+
+@ft.got('btime')
+async def _(bot: Bot, event: MessageEvent, state: T_State):
+    btime = state['btime']
+    rbt = re.match('(\d{1,2})[点时:](\d{0,2})', btime)
+    if rbt is None:
+        await ft.reject(random.choice(replies['wrong btime']))
+    else:
+        state['hour'] = int(rbt.group(1))
+        try:
+            state['minute'] = int(rbt.group(2))
+        except:
+            state['minute'] = 0
+    await bot.send(event, random.choice(replies['bt']))
+
+
+@ft.got('bt')
+async def _(bot: Bot, event: MessageEvent, state: T_State):
+    bt = state['bt']
+    if bt == '不知道':
+        state['bt'] = ''
+    elif bt not in ['A', 'B', 'O', 'AB']:
+        await ft.reject(random.choice(replies['wrong bt']))
+    await bot.send(
+        event,
+        replies['confirm'].format(
+            state['ln'],
+            state['fn'],
+            '男' if(state['sex'] == 1) else '女',
+            datetime.datetime(
+                state['year'],
+                state['month'],
+                state['day'],
+                state['hour'],
+                state['minute']
+            ),
+            '未知' if(state['bt']=='') else state['bt']
+        )
+    )
