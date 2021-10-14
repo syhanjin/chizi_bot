@@ -1,4 +1,5 @@
 import asyncio
+from os import stat
 import random
 import re
 import aiohttp
@@ -356,7 +357,11 @@ replies = {
 性别：「{2}」
 生日：「{:%Y-%m-%d %H:%M}」
 血型：「{4}」
+请发送「确定」开始，发送「取消」退出
         '''
+    ],
+    'cancel':[
+        '好吧，您可真无聊。'
     ]
 }
 msg_false = ['不', '否']
@@ -468,7 +473,7 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         await ft.reject(random.choice(replies['wrong bt']))
     await bot.send(
         event,
-        replies['confirm'].format(
+        random.choice(replies['confirm']).format(
             state['ln'],
             state['fn'],
             '男' if(state['sex'] == 1) else '女',
@@ -482,3 +487,25 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
             '未知' if(state['bt']=='') else state['bt']
         )
     )
+
+@ft.got('start')
+async def _(bot: Bot, event: MessageEvent, state: T_State):
+    if state['start'] == '取消':
+        await ft.finish(random.choice(replies['cancel']))
+    elif state['start'] == '确定':
+        data = fortuneTelling(
+            state['ln'],
+            state['fn'],
+            state['sex'],
+            datetime.datetime(
+                state['year'],
+                state['month'],
+                state['day'],
+                state['hour'],
+                state['minute']
+            ),
+            state['bt']
+        )
+        await bot.send(event, str(data))
+    else:
+        await ft.reject('指令发送有误！')
