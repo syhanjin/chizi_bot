@@ -496,8 +496,8 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
     if state['start'] == '取消':
         await ft.finish(random.choice(replies['cancel']))
     elif state['start'] == '确定':
-        await bot.send(event, )
-        data = await fortuneTelling(
+        await bot.send(event, random.choice(replies['getting']))
+        data = (await fortuneTelling(
             state['ln'],
             state['fn'],
             state['sex'],
@@ -509,7 +509,7 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
                 state['minute']
             ),
             state['bt']
-        )
+        ))
         await bot.send(event, str(data))
     else:
         await ft.reject('指令发送有误！')
