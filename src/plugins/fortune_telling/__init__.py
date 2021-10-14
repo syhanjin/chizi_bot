@@ -362,7 +362,10 @@ replies = {
     ],
     'cancel':[
         '好吧，您可真无聊。'
-    ]
+    ],
+    'getting': [
+        '正在帮您进行八字算命...'
+    ],
 }
 msg_false = ['不', '否']
 msg_true = ['确定', '当然', '没错', '没关系', '可以', '是']
@@ -493,7 +496,8 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
     if state['start'] == '取消':
         await ft.finish(random.choice(replies['cancel']))
     elif state['start'] == '确定':
-        data = fortuneTelling(
+        await bot.send(event, )
+        data = await fortuneTelling(
             state['ln'],
             state['fn'],
             state['sex'],
