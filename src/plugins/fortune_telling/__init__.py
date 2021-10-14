@@ -352,11 +352,11 @@ replies = {
     ],
     'confirm': [
         '''请确认您的数据：
-姓：「{0}」
-名：「{1}」
-性别：「{2}」
+姓：「{}」
+名：「{}」
+性别：「{}」
 生日：「{:%Y-%m-%d %H:%M}」
-血型：「{4}」
+血型：「{}」
 请发送「确定」开始，发送「取消」退出
         '''
     ],
@@ -392,7 +392,7 @@ async def _(bot: Bot, event: GroupMessageEvent, state: T_State):
     elif has(event.raw_message, msg_true):
         state['allow'] = True
         await bot.send(event, random.choice(replies['group']['allow']))
-        asyncio.sleep(1)
+        await asyncio.sleep(1)
         await bot.send(event, random.choice(replies['ln']))
     else:
         state['allow'] = None
