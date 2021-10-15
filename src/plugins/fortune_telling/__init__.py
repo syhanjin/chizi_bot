@@ -473,6 +473,8 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         state['bt'] = ''
     elif bt not in ['A', 'B', 'O', 'AB']:
         await ft.reject(random.choice(replies['wrong bt']))
+    print(str(state))
+    await bot.send(event, str(state))
     await bot.send(
         event,
         random.choice(replies['confirm']).format(
@@ -489,7 +491,6 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
             '未知' if(state['bt']=='') else state['bt']
         )
     )
-    await bot.send(event, str(state))
 
 @ft.got('st')
 async def _(bot: Bot, event: MessageEvent, state: T_State):
