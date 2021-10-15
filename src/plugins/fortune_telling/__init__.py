@@ -357,8 +357,7 @@ replies = {
 性别：「{}」
 生日：「{:%Y-%m-%d %H:%M}」
 血型：「{}」
-请发送「确定」开始，发送「取消」退出
-        '''
+请发送「确定」开始，发送「取消」退出'''
     ],
     'cancel':[
         '好吧，您可真无聊。'
@@ -491,11 +490,11 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         )
     )
 
-@ft.got('ifstart')
+@ft.got('st')
 async def _(bot: Bot, event: MessageEvent, state: T_State):
-    if state['ifstart'] == '取消':
+    if state['st'] == '取消':
         await ft.finish(random.choice(replies['cancel']))
-    elif state['ifstart'] == '确定':
+    elif state['st'] == '确定':
         await bot.send(event, random.choice(replies['getting']))
         return 
         data = (await fortuneTelling(
