@@ -495,10 +495,7 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
     if state['st'] == '取消':
         await ft.finish(random.choice(replies['cancel']))
     elif state['st'] == '确定':
-        print(state)
-        print(replies['getting'])
         await bot.send(event, random.choice(replies['getting']))
-        return 
         data = (await fortuneTelling(
             state['ln'],
             state['fn'],
