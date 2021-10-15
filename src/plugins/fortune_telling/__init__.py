@@ -489,6 +489,7 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
             '未知' if(state['bt']=='') else state['bt']
         )
     )
+    await bot.send(event, str(state))
 
 @ft.got('st')
 async def _(bot: Bot, event: MessageEvent, state: T_State):
