@@ -20,6 +20,14 @@ ft = on_regex(
     '.*(算.{0,2}[命卦]|卜.{0,2}卦).*', rule=to_me()
 )
 
+headers = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    'Accept-Encoding': 'gzip, deflate',
+    'Accept-Language': 'zh-CN,zh;q=0.9',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
+}
+
 
 def is_all_zh(s):
     for c in s:
@@ -108,12 +116,7 @@ async def fortuneTelling(
 			}&xuexing={bt
 			}&nian={date.year}&yue={date.month}&ri={date.day
 			}&hh={date.hour}&mm={date.minute}'''.encode('gb2312'),
-            headers={
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                'Accept-Encoding': 'gzip, deflate',
-                'Accept-Language': 'zh-CN,zh;q=0.9',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
+            headers=headers
         )
     soup = BeautifulSoup((await r.text('gb2312')), features="lxml")
     if len(soup.select('.ttop2 dl dd font')) == 0:
@@ -250,7 +253,7 @@ async def fortuneTelling(
     url = sxgx.select_one('script').get('src')
 
     async with aiohttp.ClientSession() as c:
-        r = await c.get('http://www.dajiazhao.com/'+url)
+        r = await c.get('http://www.dajiazhao.com/'+url, headers=headers)
     t = re.search('<p>(.+)<a', (await r.text())).group(1)
     em = sxgx.select_one('em')
     emt = em.text
@@ -359,7 +362,7 @@ replies = {
 血型：「{}」
 请发送「确定」开始，发送「取消」退出'''
     ],
-    'cancel':[
+    'cancel': [
         '好吧，您可真无聊。'
     ],
     'getting': [
@@ -486,9 +489,10 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
                 state['hour'],
                 state['minute']
             ),
-            '未知' if(state['bt']=='') else state['bt']
+            '未知' if(state['bt'] == '') else state['bt']
         )
     )
+
 
 @ft.got('st')
 async def _(bot: Bot, event: MessageEvent, state: T_State):
