@@ -110,7 +110,7 @@ async def fortuneTelling(
 
     async with aiohttp.ClientSession() as c:
         r = await c.post(
-            'http://www.dajiazhao.com/sm/scbz.asp',
+            'http://dajiazhao.com/sm/scbz.asp',
             data=f'''xing={ln}&ming={fn
 			}&xingbie={('男' if (sex == 1) else '女')
 			}&xuexing={bt
@@ -174,7 +174,6 @@ async def fortuneTelling(
     # 五行属相
     tfes = tr1.select_one('td:last-child').text.split('重要说明')[0]
     result['wxsx'] = processing_text(tfes, delete_space=True)
-
     tr2 = trs[1]
     # 农历生日
     gc = tr2.select('td:nth-child(n+2)')
@@ -184,76 +183,62 @@ async def fortuneTelling(
     # 八字
     for i in tr3.select('td')[1:]:
         result['bz'].append(i.text.strip())
-
     tr4 = trs[3]
     # 五行
     for i in tr4.select('td')[1:]:
         result['wx'].append(i.text.strip())
-
     tr5 = trs[4]
     # 纳音
     for i in tr5.select('td')[1:]:
         result['ny'].append(i.text.strip())
-
     # 八字五行个数
     ecfln = processing_text(tables[1].select_one('tr td').text, ['八字五行个数 : '])
     # 正则开始匹配
     for i in ['金', '木', '水', '火', '土']:
         result['bzwxgs'].append(int(re.search(f'(\d+)个{i}', ecfln).group(1)))
-
     # 四季用神参考
     result['sjys'] = processing_text(
         tables[2].select_one('tr:first-child td').text, ['四季用神参考 : '], delete_space=True
     )
-
     # 穷通宝鉴调候用神参考
     result['qtbjdhys'] = processing_text(
         tables[2].select_one('tr:last-child td').text, ['穷通宝鉴调候用神参考 : '], delete_space=True
     )
-
     # 日干心性
     result['rgxx'] = processing_text(
         tables[3].select_one('tr td:last-child').text, delete_space=True
     )
-
     # 日干支层次
     result['rgzcs'] = processing_text(
         tables[4].select_one('tr td:last-child').text, delete_space=True
     )
-
     # 日干支分析
     tables[5].select_one('tr td:last-child font').decompose()
     result['rgzfx'] = processing_text(
         tables[5].select_one('tr td:last-child').text
     )
-
     trs = tables[6].select('tr')
     # 五行生克制化宜忌
     result['wxskzhyj'] = processing_text(
         trs[0].select_one('td:last-child').text, delete_space=True, line_feed=True
     )
-
     # 五行之性
     result['wxzx'] = processing_text(
         trs[1].select_one('td:last-child').text, delete_space=True
     )
-
     # 四柱五行生克中对应需补的脏腑和部位
     result['szwxskxb'] = processing_text(
         trs[2].select_one('td:last-child').text, delete_space=True
     )
-
     # 宜从事行业与方位
     result['syfw'] = processing_text(
         trs[3].select_one('td:last-child').text, delete_space=True
     )
-
     # 生肖个性
     sxgx = tables[7].select_one('tr td:last-child')
     url = sxgx.select_one('script').get('src')
-
     async with aiohttp.ClientSession() as c:
-        r = await c.get('http://www.dajiazhao.com/'+url, headers=headers)
+        r = await c.get('http://dajiazhao.com/'+url, headers=headers)
     t = re.search('<p>(.+)<a', (await r.text())).group(1)
     em = sxgx.select_one('em')
     emt = em.text
@@ -267,12 +252,10 @@ async def fortuneTelling(
         {emt}
         ''', delete_space=True, line_feed=True
     )
-
     # 三命通会
     result['smth'] = processing_text(
         tables[8].select_one('tr td:last-child').text, delete_space=True, line_feed=True
     )
-
     # 月日时命理
     trs = tables[9].select('tr')
     y = trs[0].select('td')
