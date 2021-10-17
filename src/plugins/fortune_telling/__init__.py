@@ -107,10 +107,9 @@ async def fortuneTelling(
             raise ValueError('sex must be 1 or 2')
     else:
         raise TypeError('sex must be a int')
-
     async with aiohttp.ClientSession() as c:
         r = await c.post(
-            'http://dajiazhao.com/sm/scbz.asp',
+            'http://www.dajiazhao.com/sm/scbz.asp',
             data=f'''xing={ln}&ming={fn
 			}&xingbie={('男' if (sex == 1) else '女')
 			}&xuexing={bt
@@ -118,7 +117,7 @@ async def fortuneTelling(
 			}&hh={date.hour}&mm={date.minute}'''.encode('gb2312'),
             headers=headers
         )
-    soup = BeautifulSoup((await r.text('gb2312')), features="lxml")
+        soup = BeautifulSoup((await r.text('gb2312')), features="lxml")
     if len(soup.select('.ttop2 dl dd font')) == 0:
         # 判定无结果
         raise RuntimeError('Unable to get data.')
@@ -238,8 +237,8 @@ async def fortuneTelling(
     sxgx = tables[7].select_one('tr td:last-child')
     url = sxgx.select_one('script').get('src')
     async with aiohttp.ClientSession() as c:
-        r = await c.get('http://dajiazhao.com/'+url, headers=headers)
-    t = re.search('<p>(.+)<a', (await r.text())).group(1)
+        r = await c.get('http://www.dajiazhao.com/'+url, headers=headers)
+        t = re.search('<p>(.+)<a', (await r.text())).group(1)
     em = sxgx.select_one('em')
     emt = em.text
     em.decompose()
