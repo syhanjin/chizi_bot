@@ -458,22 +458,22 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         state['bt'] = ''
     elif bt not in ['A', 'B', 'O', 'AB']:
         await ft.reject(random.choice(replies['wrong bt']))
-    await bot.send(
-        event,
-        random.choice(replies['confirm']).format(
-            state['ln'],
-            state['fn'],
-            '男' if(state['sex'] == 1) else '女',
-            datetime.datetime(
-                state['year'],
-                state['month'],
-                state['day'],
-                state['hour'],
-                state['minute']
-            ),
-            '未知' if(state['bt'] == '') else state['bt']
-        )
-    )
+    # await bot.send(
+    #     event,
+    #     random.choice(replies['confirm']).format(
+    #         state['ln'],
+    #         state['fn'],
+    #         '男' if(state['sex'] == 1) else '女',
+    #         datetime.datetime(
+    #             state['year'],
+    #             state['month'],
+    #             state['day'],
+    #             state['hour'],
+    #             state['minute']
+    #         ),
+    #         '未知' if(state['bt'] == '') else state['bt']
+    #     )
+    # )
 
 
 @ft.got('st')
