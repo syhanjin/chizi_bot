@@ -497,6 +497,6 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         ))
         print('--ok--')
         print(data)
-        await bot.send(event, str(data))
+        await bot.send(event, '成功')
     else:
         await ft.reject('指令发送有误！')
