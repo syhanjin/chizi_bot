@@ -16,7 +16,7 @@ restart = on_command(
 @restart.handle()
 async def _(bot: Bot, event: PrivateMessageEvent):
     subp = subprocess.Popen(
-        '/root/restart_website.sh', stdout=subprocess.STDOUT, encoding="utf-8", shell=True
+        '/root/restart_website.sh', encoding="utf-8", shell=True
     )
     while True:
         if subp.poll() is not None and subp.poll() == 0:
