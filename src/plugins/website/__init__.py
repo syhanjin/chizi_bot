@@ -20,6 +20,6 @@ async def _(bot: Bot, event: PrivateMessageEvent):
     )
     while True:
         if subp.poll() is not None and subp.poll() == 0:
-            await bot.send(event, f'''重启成功，输出：\n{subp.communicate()}''')
+            await bot.send(event, f'''重启成功！''')
             return
         await asyncio.sleep(1)
