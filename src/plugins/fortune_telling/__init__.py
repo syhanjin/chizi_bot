@@ -20,6 +20,8 @@ from handles.message_builder import image
 from handles.message_builder import face, text
 from handles.zhongguose import *
 
+bg = os.path.join('.', 'res', 'ft', 'bg.png')
+Image.new('RGB', (1200, 3000), (255, 255, 255)).save(bg)
 
 ft = on_regex(
     '.*(算.{0,2}[命卦]|卜.{0,2}卦).*', rule=to_me()
@@ -533,8 +535,7 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
             ),
             state['bt']
         ))
-        Image.new('RGB', (1200, 3000), (255, 255, 255)).save('res/ft/bg.png')
-        draw = ImgDraw('bg.png')
+        draw = ImgDraw(bg)
         await draw.init()
         font = os.path.join('LXGWWenKai-Regular.ttf')
         draw.pos = (30, 30)
