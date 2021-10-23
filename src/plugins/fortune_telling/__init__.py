@@ -1,7 +1,8 @@
 import asyncio
-from os import stat
+import os
 import random
 import re
+from PIL import Image
 import aiohttp
 import datetime
 from bs4 import BeautifulSoup
@@ -12,13 +13,26 @@ from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent, Priva
 from nonebot.plugin import on_command, on_regex
 from nonebot.rule import to_me
 from nonebot.typing import T_State
+from handles import image
+from handles.image import ImgDraw
+from handles.message_builder import image
 
 from handles.message_builder import face, text
+from handles.zhongguose import *
 
 
 ft = on_regex(
     '.*(算.{0,2}[命卦]|卜.{0,2}卦).*', rule=to_me()
 )
+
+headers = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    'Accept-Encoding': 'gzip, deflate',
+    'Accept-Language': 'zh-CN,zh;q=0.9',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
+}
+
 
 headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -47,6 +61,7 @@ def processing_text(text: str, deletions: list = [], delete_space: bool = False,
         text = text.replace(' ', '').strip()
     else:
         text = text.strip()
+    text = text.replace(',', '，')
     for i in deletions:
         text = text.replace(i, '')
     return text
@@ -235,18 +250,16 @@ async def fortuneTelling(
     )
     # 生肖个性
     sxgx = tables[7].select_one('tr td:last-child')
-    url = sxgx.select_one('script').get('src')
-    async with aiohttp.ClientSession() as c:
-        r = await c.get('http://www.dajiazhao.com/'+url, headers=headers)
-        t = re.search('<p>(.+)<a', (await r.text())).group(1)
+    # url = sxgx.select_one('script').get('src')
+    # async with aiohttp.ClientSession() as c:
+    #     r = await c.get('http://www.dajiazhao.com/'+url, headers=headers)
+    #     t = re.search('<p>(.+)<a', (await r.text())).group(1)
     em = sxgx.select_one('em')
     emt = em.text
     em.decompose()
     result['sxgx'] = processing_text(
         f'''
         {sxgx.text}
-
-        {t}
 
         {emt}
         ''', delete_space=True, line_feed=True
@@ -275,6 +288,16 @@ async def fortuneTelling(
     # endregion
     return result
 
+
+def linefeed(string, length):
+    return re.sub(
+        '(.{'+str(length)+'}[，。？！]?)',
+        (lambda i: i.group(0)+'\n'),
+        string
+    )
+
+
+TESTWIDTH = 45
 
 replies = {
     'group': {
@@ -344,7 +367,7 @@ replies = {
 血型：「{}」'''
     ],
     'cancel': [
-        '好吧，您可真无聊。'
+        '好吧，您可真无聊...那不弄了'
     ],
     'getting': [
         '正在帮您进行八字算命...'
@@ -352,9 +375,10 @@ replies = {
 }
 msg_false = ['不', '否']
 msg_true = ['确定', '当然', '没错', '没关系', '可以', '是']
+msg_cancel = ['取消', '算了', '不弄了']
 
 
-def has(text, words):
+def has(text, words: list):
     for i in words:
         if i in text:
             return True
@@ -369,11 +393,12 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         )
     elif isinstance(event, PrivateMessageEvent):
         state['allow'] = True
+        await bot.send(event, random.choice(replies['ln']))
 
 
 @ft.got('allow')
 async def _(bot: Bot, event: GroupMessageEvent, state: T_State):
-    if has(event.raw_message, msg_false):
+    if has(event.raw_message, msg_false) or has(event.raw_message, msg_cancel):
         await ft.finish(random.choice(replies['group']['cancel']))
     elif has(event.raw_message, msg_true):
         state['allow'] = True
@@ -387,6 +412,8 @@ async def _(bot: Bot, event: GroupMessageEvent, state: T_State):
 
 @ft.got('ln')
 async def _(bot: Bot, event: MessageEvent, state: T_State):
+    if has(event.raw_message, msg_cancel):
+        await ft.finish(random.choice(replies['cancel']))
     ln = state['ln']
     if not is_all_zh(ln) or 0 == len(ln) or len(ln) > 2:
         await ft.reject(random.choice(replies['wrong ln']))
@@ -396,6 +423,8 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
 
 @ft.got('fn')
 async def _(bot: Bot, event: MessageEvent, state: T_State):
+    if has(event.raw_message, msg_cancel):
+        await ft.finish(random.choice(replies['cancel']))
     fn = state['fn']
     if not is_all_zh(fn) or 0 == len(fn) or len(fn) > 3:
         await ft.reject(random.choice())
@@ -405,6 +434,8 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
 
 @ft.got('sex')
 async def _(bot: Bot, event: MessageEvent, state: T_State):
+    if has(event.raw_message, msg_cancel):
+        await ft.finish(random.choice(replies['cancel']))
     sex = state['sex']
     if sex == '男':
         state['sex'] = 1
@@ -418,6 +449,8 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
 
 @ft.got('birthday')
 async def _(bot: Bot, event: MessageEvent, state: T_State):
+    if has(event.raw_message, msg_cancel):
+        await ft.finish(random.choice(replies['cancel']))
     birthday = state['birthday']
     rb = re.match('(\d{4})[-./年](\d{1,2})[-./月](\d{1,2})', birthday)
     if rb is None:
@@ -437,6 +470,8 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
 
 @ft.got('btime')
 async def _(bot: Bot, event: MessageEvent, state: T_State):
+    if has(event.raw_message, msg_cancel):
+        await ft.finish(random.choice(replies['cancel']))
     btime = state['btime']
     rbt = re.match('(\d{1,2})[点时:](\d{0,2})', btime)
     if rbt is None:
@@ -452,6 +487,8 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
 
 @ft.got('bt')
 async def _(bot: Bot, event: MessageEvent, state: T_State):
+    if has(event.raw_message, msg_cancel):
+        await ft.finish(random.choice(replies['cancel']))
     bt = state['bt']
     if bt == '不知道':
         state['bt'] = ''
@@ -496,8 +533,77 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
             ),
             state['bt']
         ))
-        print('--ok--')
-        print(data)
-        await bot.send(event, '成功')
+        Image.new('RGB', (1200, 3000), (255, 255, 255)).save('res/ft/bg.png')
+        draw = ImgDraw('bg.png')
+        await draw.init()
+        font = os.path.join('LXGWWenKai-Regular.ttf')
+        draw.pos = (30, 30)
+        await draw.openfont(font)
+        #
+        await draw.putText(data['name'], 0, 30, fontsize=48, fill=JIANJINGYUHONG)
+        await draw.putText('出生\n时间', 1, 15, fontsize=24, fill=CAOMOLIHONG)
+        await draw.putText(
+            f"公历：{data['birthday']['gc']}\n农历：{data['birthday']['lc']}",
+            0, 30, fontsize=24
+        )
+        draw.x = 30
+        # await draw.putText('基本信息', 0, 10, fontsize=36)
+        # await draw.putText(data['info'], 0, 30, fontsize=24)
+
+        await draw.putText('五行属相', 0, 5, fontsize=30)
+        await draw.putText(data['wxsx'], 0, 15, fontsize=24)
+
+        await draw.putText('''八字：\n五行：\n纳音：''', 1, 10, fontsize=24)
+        await draw.putText(f'''{data['bz'][0]}\n{data['wx'][0]}\n{data['ny'][0]}''', 1, 10, fontsize=24)
+        await draw.putText(f'''{data['bz'][1]}\n{data['wx'][1]}\n{data['ny'][1]}''', 1, 10, fontsize=24)
+        await draw.putText(f'''{data['bz'][2]}\n{data['wx'][2]}\n{data['ny'][2]}''', 1, 10, fontsize=24)
+        await draw.putText(f'''{data['bz'][3]}\n{data['wx'][3]}\n{data['ny'][3]}''', 0, 30, fontsize=24)
+        draw.x = 30
+        await draw.putText(
+            f'''八字五行个数：{data['bzwxgs'][0]}个金，{data['bzwxgs'][1]}个木，{
+                data['bzwxgs'][2]}个水，{data['bzwxgs'][3]}个火，{data['bzwxgs'][4]}个土。''',
+            0, 15, fontsize=24
+        )
+        await draw.putText('四季用神参考', 0, 10, fontsize=36)
+        await draw.putText(linefeed(data['sjys'], TESTWIDTH), 0, 30, fontsize=24)
+        await draw.putText('穷通宝鉴调候用神参考', 0, 10, fontsize=36)
+        await draw.putText(linefeed(data['qtbjdhys'], TESTWIDTH), 0, 30, fontsize=24)
+        await draw.putText('日干心性', 0, 10, fontsize=36)
+        await draw.putText(linefeed(data['rgxx'], TESTWIDTH), 0, 30, fontsize=24)
+        await draw.putText('日干支层次', 0, 10, fontsize=36)
+        await draw.putText(linefeed(data['rgzcs'], TESTWIDTH), 0, 30, fontsize=24)
+        await draw.putText('日干支分析', 0, 10, fontsize=36)
+        await draw.putText(linefeed(data['rgzfx'], TESTWIDTH), 0, 30, fontsize=24)
+        await draw.putText('五行生克制化宜忌', 0, 10, fontsize=36)
+        await draw.putText(linefeed(data['wxskzhyj'], TESTWIDTH), 0, 30, fontsize=24)
+        await draw.putText('五行之性', 0, 10, fontsize=36)
+        await draw.putText(linefeed(data['wxzx'], TESTWIDTH), 0, 30, fontsize=24)
+        await draw.putText('四柱五行生克中对应需补的脏腑和部位', 0, 10, fontsize=36)
+        await draw.putText(linefeed(data['szwxskxb'], TESTWIDTH), 0, 30, fontsize=24)
+        await draw.putText('宜从事行业与方位', 0, 10, fontsize=36)
+        await draw.putText(linefeed(data['syfw'], TESTWIDTH), 0, 30, fontsize=24)
+        await draw.putText('生肖个性', 0, 10, fontsize=36)
+        await draw.putText(linefeed(data['sxgx'], TESTWIDTH), 0, 50, fontsize=24)
+        await draw.putText('三命通会', 0, 10, fontsize=36)
+        await draw.putText(linefeed(data['smth'], TESTWIDTH), 0, 30, fontsize=24)
+        await draw.putText('月日时命理', 0, 10, fontsize=36)
+        draw.x += 15
+        await draw.putText(data['yrsml']['y'][0], 0, 10, fontsize=28)
+        await draw.putText(linefeed(data['yrsml']['y'][1], TESTWIDTH), 0, 30, fontsize=24)
+        await draw.putText(data['yrsml']['r'][0], 0, 10, fontsize=28)
+        await draw.putText(linefeed(data['yrsml']['r'][1], TESTWIDTH), 0, 30, fontsize=24)
+        await draw.putText(data['yrsml']['s'][0], 0, 10, fontsize=28)
+        await draw.putText(linefeed(data['yrsml']['s'][1], TESTWIDTH), 0, 30, fontsize=24)
+
+        draw.y += 50
+        await draw.putText('此图片乃临时格式，正式格式正在设计...', 0, 5, fill=LUHUI)
+        await draw.putText('By Hanjin in Sakuyark@2021', 0, 5, fill=LUHUI)
+        out_path = os.path.join(
+            '.', 'res', 'ft', 'cards',
+            datetime.datetime.now().__format__('%Y%m%d%H%M%S') +
+            str(random.randint(10, 99))+'.jpg'
+        )
+        await draw.save(out_path)
+        await bot.send(event, image('file://'+out_path), at_sender=True)
     else:
         await ft.reject('指令发送有误！')

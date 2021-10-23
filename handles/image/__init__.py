@@ -3,6 +3,7 @@ from typing import Union
 from PIL import Image, ImageDraw, ImageFont
 import nonebot
 
+black = (0, 0, 0)
 
 class Draw(object):
     def __init__(self) -> None:
@@ -46,7 +47,7 @@ class Draw(object):
             await self.openfont(font, fontsize)
         else:
             await self.openfont(fontsize=fontsize)
-        if type(text) == type(()):
+        if type(text) == type(()) or type(text) == type([]):
             tmp, text = text, ''
             for i in tmp:
                 text += str(i) + ' '

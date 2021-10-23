@@ -89,7 +89,7 @@ class Checkin(User):
         await img.init()
         img.resize((1920, 1080), Image.ANTIALIAS)
         font = os.path.join(
-            '.', 'res', 'checkin', 'fonts', 'LXGWWenKai-Regular.ttf'
+            '.', 'res', 'fonts', 'LXGWWenKai-Regular.ttf'
         )
         img.draw.rectangle((0, 400, 1920, 1080), fill=(216, 216, 216, 216))
         await img.openfont(font)
