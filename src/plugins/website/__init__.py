@@ -16,10 +16,10 @@ restart = on_command(
 @restart.handle()
 async def _(bot: Bot, event: PrivateMessageEvent):
     subp = subprocess.Popen(
-        '/root/restart_website.sh', stdout=subprocess.PIPE, encoding="utf-8", shell=True
+        '/root/restart_website.sh', stdout=subprocess.STDOUT, encoding="utf-8", shell=True
     )
     while True:
         if subp.poll() is not None and subp.poll() == 0:
-            await bot.send(event, f'''重启成功，输出：\n{subp.communicate()[0]}''')
+            await bot.send(event, f'''重启成功，输出：\n{subp.communicate()}''')
             return
         await asyncio.sleep(1)
