@@ -599,5 +599,6 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         )
         await draw.save(out_path)
         await bot.send(event, image(out_path), at_sender=True)
+        os.remove(out_path)
     else:
         await ft.reject('指令发送有误！')

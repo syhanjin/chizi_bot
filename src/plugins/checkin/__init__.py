@@ -205,4 +205,5 @@ async def _(bot: Bot, event: GroupMessageEvent):
     src = await c.generate_card()
     await c.save()
     await bot.send(event, ms.image('file://'+src), at_sender=True)
+    os.remove(src)
 
