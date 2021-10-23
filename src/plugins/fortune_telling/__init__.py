@@ -604,6 +604,6 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
             str(random.randint(10, 99))+'.jpg'
         )
         await draw.save(out_path)
-        await bot.send(event, image('file://'+out_path), at_sender=True)
+        await bot.send(event, image('file://'+os.path.abspath(out_path)), at_sender=True)
     else:
         await ft.reject('指令发送有误！')
