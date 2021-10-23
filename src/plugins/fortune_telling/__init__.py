@@ -591,6 +591,7 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         draw.y += 50
         await draw.putText('此图片乃临时格式，正式格式正在设计...', 0, 5, fill=LUHUI)
         await draw.putText('By Hanjin in Sakuyark@2021', 0, 5, fill=LUHUI)
+        await draw.putText('From www.dajiazhao.com', 0, 5, fill=LUHUI)
         out_path = os.path.join(
             '.', 'res', 'ft', 'cards',
             datetime.datetime.now().__format__('%Y%m%d%H%M%S') +
