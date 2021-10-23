@@ -21,6 +21,7 @@ from handles.message_builder import face, text
 from handles.zhongguose import *
 
 bg = os.path.join('.', 'res', 'ft', 'bg.png')
+font = os.path.join('.', 'res', 'fonts','LXGWWenKai-Regular.ttf')
 Image.new('RGB', (1200, 3000), (255, 255, 255)).save(bg)
 
 ft = on_regex(
@@ -537,7 +538,6 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         ))
         draw = ImgDraw(bg)
         await draw.init()
-        font = os.path.join('LXGWWenKai-Regular.ttf')
         draw.pos = (30, 30)
         await draw.openfont(font)
         #
