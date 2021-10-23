@@ -37,14 +37,6 @@ headers = {
 }
 
 
-headers = {
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    'Accept-Encoding': 'gzip, deflate',
-    'Accept-Language': 'zh-CN,zh;q=0.9',
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
-}
-
 
 def is_all_zh(s):
     for c in s:
@@ -605,6 +597,6 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
             str(random.randint(10, 99))+'.jpg'
         )
         await draw.save(out_path)
-        await bot.send(event, image('file://'+os.path.abspath(out_path)), at_sender=True)
+        await bot.send(event, image(out_path), at_sender=True)
     else:
         await ft.reject('指令发送有误！')
