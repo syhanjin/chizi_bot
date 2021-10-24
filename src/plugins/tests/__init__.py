@@ -1,4 +1,5 @@
 
+import asyncio
 from nonebot import on_command
 import nonebot
 from nonebot.adapters.cqhttp.event import MessageEvent, PrivateMessageEvent
@@ -14,6 +15,9 @@ t1 = on_command(
 )
 t2 = on_command(
     'test2', priority=1, block=False
+)
+t3 = on_command(
+    'test3', priority=2, block=False, permission=PRIVATE
 )
 
 
@@ -32,4 +36,10 @@ async def _(bot: Bot, event: MessageEvent):
     await bot.send(
         event,
         f'我是{NAME}, 一个可爱的机器人，来自Sakuyark'
+    )
+
+@t3.handle()
+async def _(bot: Bot, event: PrivateMessageEvent):
+    await bot.send(
+        event, '测试3'
     )
