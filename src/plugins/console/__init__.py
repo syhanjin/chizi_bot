@@ -3,6 +3,7 @@ import os
 import subprocess
 import nonebot
 from nonebot import permission
+from nonebot import matcher
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.event import PrivateMessageEvent
 from nonebot.adapters.cqhttp.permission import PRIVATE
@@ -43,12 +44,24 @@ async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
     await bot.send(
         event,
         f'''$ git fetch origin master\n{
-            fetch.communicate()[1]
+            str(fetch.communicate()[1])
         }\n$ git log -p master.. origin/master\n{
-            log.communicate()[1]
+            str(log.communicate()[1])
         }'''
     )
 
-@update.got('merge')
+@update.got('merge', prompt='是否merge')
 async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
-    pass
+    if state['merge'] == '是':
+        merge = subprocess.Popen(
+            'git merge origin/master',
+            shell=True, stdin=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        while merge.poll() is None:
+            await asyncio.sleep(1)
+        await bot.send(
+            event,
+            f'''$ git merge origin/master\n{
+                str(merge.communicate()[1])
+            }'''
+        )
