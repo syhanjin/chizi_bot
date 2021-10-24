@@ -44,24 +44,25 @@ async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
     await bot.send(
         event,
         f'''$ git fetch origin master\n{
-            str(fetch.communicate()[1])
+            str(fetch.stdout)
         }\n$ git log -p master.. origin/master\n{
-            str(log.communicate()[1])
+            str(log.stdout)
         }'''
     )
+
 
 @update.got('merge', prompt='是否merge')
 async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
     if state['merge'] == '是':
         merge = subprocess.Popen(
             'git merge origin/master',
-            shell=True, stdin=subprocess.PIPE, stderr=subprocess.PIPE
+            shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         while merge.poll() is None:
             await asyncio.sleep(1)
         await bot.send(
             event,
             f'''$ git merge origin/master\n{
-                str(merge.communicate()[1])
+                str(merge.stdout)
             }'''
         )
