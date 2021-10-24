@@ -43,9 +43,9 @@ async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
     await bot.send(
         event,
         f'''$ git fetch origin master\n{
-            fetch.communicate()[0]
+            fetch.communicate()[1]
         }\n$ git log -p master.. origin/master\n{
-            log.communicate()[0]
+            log.communicate()[1]
         }'''
     )
 
