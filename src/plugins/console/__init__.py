@@ -15,5 +15,5 @@ reload = on_command(
 
 @reload.handle()
 async def _(bot: Bot, event: PrivateMessageEvent):
-    load_plugins('src/plugins')
+    nonebot.load_plugins('src/plugins')
     await bot.send(event, '重载成功')
