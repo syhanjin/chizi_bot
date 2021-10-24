@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import nonebot
 from nonebot.adapters.cqhttp import Bot as CQHTTPBot, message
+from nonebot.adapters.cqhttp.bot import Bot
 
 from handles import NAME, ONWER
 # 初始化nb
@@ -18,9 +19,13 @@ nonebot.load_plugin('nonebot_plugin_help')
 nonebot.load_plugin('nonebot_plugin_apscheduler')
 
 app = nonebot.get_asgi()
-if __name__ == "__main__":
-    nonebot.run()
-    nonebot.get_bot().send_private_msg(
+
+
+@driver.on_bot_connect
+async def do_something(bot: Bot):
+    await bot.send_private_msg(
         user_id=ONWER,
         message=f'{NAME} 已启动'
     )
+if __name__ == "__main__":
+    nonebot.run()
