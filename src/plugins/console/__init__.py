@@ -1,4 +1,6 @@
 import asyncio
+import os
+import subprocess
 import nonebot
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.event import PrivateMessageEvent
@@ -7,13 +9,14 @@ from nonebot.permission import SUPERUSER
 from nonebot.plugin import load_plugins, on_command
 
 
-reload = on_command(
-    '重载插件', aliases={'插件重载'},
+restart = on_command(
+    '重启', aliases={'bot重启'},
     priority=2, block=True, permission=SUPERUSER | PRIVATE
 )
 
 
-@reload.handle()
+@restart.handle()
 async def _(bot: Bot, event: PrivateMessageEvent):
-    nonebot.load_plugins('src/plugins')
-    await bot.send(event, '重载成功')
+    pid = os.getpid()
+    subp = subprocess.Popen('./restart.sh', shell=True)
+    subp.communicate(str(pid).encode('utf-8'))
