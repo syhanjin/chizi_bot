@@ -29,37 +29,14 @@ async def _(bot: Bot, event: PrivateMessageEvent):
 
 @update.handle()
 async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
-    fetch = subprocess.Popen(
-        'git fetch origin master',
+    pull = subprocess.Popen(
+        'git pull origin master',
         shell=True, stdin=subprocess.PIPE, stderr=subprocess.PIPE
     )
-    while fetch.poll() is None:
-        await asyncio.sleep(1)
-    log = subprocess.Popen(
-        'git log -p master.. origin/master',
-        shell=True, stdin=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-    while log.poll() is None:
+    while pull.poll() is None:
         await asyncio.sleep(1)
     await bot.send(
         event,
-        '$ git fetch origin master\n'
-        + str(fetch.stdout)
-        + '\n$ git log -p master.. origin/master\n'
-        + str(log.stdout)
+        '$ git pull origin master\n'
+        + pull.communicate[1]
     )
-
-
-@update.got('merge', prompt='是否merge')
-async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
-    if state['merge'] == '是':
-        merge = subprocess.Popen(
-            'git merge origin/master',
-            shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
-        while merge.poll() is None:
-            await asyncio.sleep(1)
-        await bot.send(
-            event,
-            '$ git merge origin/master\n'+str(merge.stdout)
-        )
