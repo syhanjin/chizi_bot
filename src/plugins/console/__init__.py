@@ -25,6 +25,28 @@ update = on_command(
 async def _(bot: Bot, event: PrivateMessageEvent):
     subp = subprocess.Popen('./restart.sh', shell=True)
 
+
 @update.handle()
 async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
-    pass
+    fetch = subprocess.Popen(
+        'git fetch origin master',
+        shell=True, stdin=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    while fetch.poll() is None:
+        await asyncio.sleep(1)
+    log = subprocess.Popen(
+        'git log -p master.. origin/master',
+        shell=True, stdin=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    while log.poll() is None:
+        await asyncio.sleep(1)
+    await bot.send(
+        event,
+        f'''$ git fetch origin master\n{
+            fetch.communicate()[0]
+        }\n$ git log -p master.. origin/master\n{
+            log.communicate()[0]
+        }'''
+    )
+
+# @update.got('merge')
