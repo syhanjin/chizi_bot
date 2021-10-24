@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import nonebot
-from nonebot.adapters.cqhttp import Bot as CQHTTPBot
+from nonebot.adapters.cqhttp import Bot as CQHTTPBot, message
+
+from handles import NAME, ONWER
 # 初始化nb
 nonebot.init()
 
@@ -18,3 +20,7 @@ nonebot.load_plugin('nonebot_plugin_apscheduler')
 app = nonebot.get_asgi()
 if __name__ == "__main__":
     nonebot.run()
+    nonebot.get_bot().send_private_msg(
+        user_id=ONWER,
+        message=f'{NAME} 已启动'
+    )
