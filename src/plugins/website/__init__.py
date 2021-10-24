@@ -7,6 +7,11 @@ from nonebot.plugin import on_command
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.event import PrivateMessageEvent
 
+__usage__ = '<SUPERUSER> 控制网站'
+__help__version__ = '0.1.1'
+__help__plugin_name__ = '网站控制bot段'
+
+
 restart = on_command(
     'website restart', aliases={'网站重启', '重启网站'},
     priority=2, block=True, permission=SUPERUSER | PRIVATE

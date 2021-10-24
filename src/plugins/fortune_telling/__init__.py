@@ -13,12 +13,19 @@ from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent, Priva
 from nonebot.plugin import on_command, on_regex
 from nonebot.rule import to_me
 from nonebot.typing import T_State
-from handles import image
+from handles import NAME, image
 from handles.image import ImgDraw
 from handles.message_builder import image
 
 from handles.message_builder import face, text
 from handles.zhongguose import *
+
+__usage__ = f'您可以使用任何正常状态下的文字请{NAME}算命'
+__help__version__ = '0.1.4'
+__help__plugin_name__ = "智能化八字算命" 
+
+
+
 
 bg = os.path.join('.', 'res', 'ft', 'bg.png')
 font = os.path.join('.', 'res', 'fonts','LXGWWenKai-Regular.ttf')
@@ -306,11 +313,11 @@ replies = {
         'cancel': [
             text('好吧好吧，如果你还是想算，可以悄悄的来找我哦')
             + face(20) + face(20)
-        ],
-        'allow': [
-            '好吧，那我们开始吧！'
         ]
     },
+    'start':[
+        '开始了！如果你中间不想算了，可以随时告诉我'
+    ],
     'not understand': [
         face(32)
         + text('您在说什么呐，我怎么听不懂呢？')
@@ -388,6 +395,8 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         )
     elif isinstance(event, PrivateMessageEvent):
         state['allow'] = True
+        await bot.send(event, random.choice(replies['start']))
+        await asyncio.sleep(1)
         await bot.send(event, random.choice(replies['ln']))
 
 
@@ -397,7 +406,7 @@ async def _(bot: Bot, event: GroupMessageEvent, state: T_State):
         await ft.finish(random.choice(replies['group']['cancel']))
     elif has(event.raw_message, msg_true):
         state['allow'] = True
-        await bot.send(event, random.choice(replies['group']['allow']))
+        await bot.send(event, random.choice(replies['start']))
         await asyncio.sleep(1)
         await bot.send(event, random.choice(replies['ln']))
     else:
