@@ -4,7 +4,6 @@ import nonebot
 from nonebot.adapters.cqhttp import Bot as CQHTTPBot, message
 from nonebot.adapters.cqhttp.bot import Bot
 
-from handles import NAME, ONWER
 # 初始化nb
 nonebot.init()
 
@@ -23,6 +22,7 @@ app = nonebot.get_asgi()
 
 @driver.on_bot_connect
 async def do_something(bot: Bot):
+    from handles import NAME, ONWER
     await bot.send_private_msg(
         user_id=ONWER,
         message=f'{NAME} 已启动'
