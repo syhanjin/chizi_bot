@@ -19,7 +19,7 @@ nonebot.load_plugin('nonebot_plugin_apscheduler')
 app = nonebot.get_asgi()
 
 
-from nonebot.adapters.cqhttp.bot import Bot
+from nonebot import Bot
 @driver.on_bot_connect
 async def do_something(bot: Bot):
     from handles import NAME, ONWER
