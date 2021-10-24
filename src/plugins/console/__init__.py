@@ -19,4 +19,3 @@ restart = on_command(
 async def _(bot: Bot, event: PrivateMessageEvent):
     pid = os.getpid()
     subp = subprocess.Popen('./restart.sh', shell=True)
-    subp.communicate(str(pid).encode('utf-8'))
