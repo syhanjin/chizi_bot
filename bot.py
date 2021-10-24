@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import nonebot
 from nonebot.adapters.cqhttp import Bot as CQHTTPBot, message
-from nonebot.adapters.cqhttp.bot import Bot
 
 # 初始化nb
 nonebot.init()
@@ -20,6 +19,7 @@ nonebot.load_plugin('nonebot_plugin_apscheduler')
 app = nonebot.get_asgi()
 
 
+from nonebot.adapters.cqhttp.bot import Bot
 @driver.on_bot_connect
 async def do_something(bot: Bot):
     from handles import NAME, ONWER
