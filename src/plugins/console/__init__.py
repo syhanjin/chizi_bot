@@ -38,5 +38,8 @@ async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
     await bot.send(
         event,
         '$ git pull origin master\n'
-        + pull.communicate[1]
+        + pull.communicate()[1]
     )
+    await asyncio.sleep(1)
+    await bot.send('重启中...')
+    subp = subprocess.Popen('./restart.sh', shell=True)
