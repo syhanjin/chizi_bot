@@ -49,4 +49,6 @@ async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
         }'''
     )
 
-# @update.got('merge')
+@update.got('merge')
+async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
+    pass
