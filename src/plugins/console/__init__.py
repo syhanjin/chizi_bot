@@ -43,11 +43,10 @@ async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
         await asyncio.sleep(1)
     await bot.send(
         event,
-        f'''$ git fetch origin master\n{
-            str(fetch.stdout)
-        }\n$ git log -p master.. origin/master\n{
-            str(log.stdout)
-        }'''
+        '$ git fetch origin master\n'
+        + str(fetch.stdout)
+        + '\n$ git log -p master.. origin/master\n'
+        + str(log.stdout)
     )
 
 
@@ -62,7 +61,5 @@ async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
             await asyncio.sleep(1)
         await bot.send(
             event,
-            f'''$ git merge origin/master\n{
-                str(merge.stdout)
-            }'''
+            '$ git merge origin/master\n'+str(merge.stdout)
         )
