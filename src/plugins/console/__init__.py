@@ -31,7 +31,7 @@ async def _(bot: Bot, event: PrivateMessageEvent):
 async def _(bot: Bot, event: PrivateMessageEvent, state: T_State):
     pull = subprocess.Popen(
         'git pull origin master',
-        shell=True, stdin=subprocess.PIPE, stderr=subprocess.PIPE
+        shell=True, stdin=subprocess.PIPE, stderr=subprocess.PIPE, stdout=subprocess.PIPE
     )
     while pull.poll() is None:
         await asyncio.sleep(1)
