@@ -11,13 +11,15 @@ from nonebot.permission import SUPERUSER
 from nonebot.plugin import load_plugins, on_command, require
 from nonebot.typing import T_State
 
+from handles.message_builder import text
+
 scheduler = require("nonebot_plugin_apscheduler").scheduler
 restart = on_command(
     '重启', aliases={'bot重启'},
     priority=2, block=True, permission=SUPERUSER | PRIVATE
 )
 update = on_command(
-    '更新', aliases={'获取更新'},
+    '更新', aliases={'获取更新', '检查更新'},
     priority=2, permission=SUPERUSER | PRIVATE, block=True
 )
 
@@ -29,7 +31,7 @@ async def _(bot: Bot, event: PrivateMessageEvent):
 @scheduler.scheduled_job("cron", hour=0, id="update")
 async def bot_update():
     bot = get_bot()
-    await bot.send('检查更新...')
+    await bot.send(text('检查更新...'))
     pull = subprocess.Popen(
         'git pull origin master',
         shell=True, stdin=subprocess.PIPE, stderr=subprocess.PIPE, stdout=subprocess.PIPE
@@ -42,7 +44,7 @@ async def bot_update():
         + str(pull.communicate()[0], encoding='utf-8')
     )
     await asyncio.sleep(1)
-    await bot.send('重启中...')
+    await bot.send(text('重启bot...'))
     subprocess.Popen('./restart.sh', shell=True)
 
 
