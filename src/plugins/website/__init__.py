@@ -22,7 +22,6 @@ update = on_command(
 )
 
 
-
 @restart.handle()
 async def _(bot: Bot, event: PrivateMessageEvent):
     subp = subprocess.Popen(
@@ -33,6 +32,7 @@ async def _(bot: Bot, event: PrivateMessageEvent):
             await bot.send(event, f'''重启成功！''')
             return
         await asyncio.sleep(1)
+
 
 @update.handle()
 async def _(bot: Bot, event: PrivateMessageEvent):
