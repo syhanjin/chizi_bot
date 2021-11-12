@@ -16,6 +16,11 @@ restart = on_command(
     'website restart', aliases={'网站重启', '重启网站'},
     priority=2, block=True, permission=SUPERUSER | PRIVATE
 )
+update = on_command(
+    'website_update', aliases={'网站更新', '更新网站'},
+    priority=2, block=True, permission=SUPERUSER | PRIVATE
+)
+
 
 
 @restart.handle()
@@ -26,5 +31,20 @@ async def _(bot: Bot, event: PrivateMessageEvent):
     while True:
         if subp.poll() is not None and subp.poll() == 0:
             await bot.send(event, f'''重启成功！''')
+            return
+        await asyncio.sleep(1)
+
+@update.handle()
+async def _(bot: Bot, event: PrivateMessageEvent):
+    subp = subprocess.Popen(
+        '/root/website/gitpull.sh', encoding="utf-8", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    while True:
+        if subp.poll() is not None and subp.poll() == 0:
+            await bot.send(
+                event,
+                f'''{subp.communicate()[0]}
+{subp.communicate()[1]}'''
+            )
             return
         await asyncio.sleep(1)

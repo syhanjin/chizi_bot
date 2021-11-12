@@ -1,0 +1,10 @@
+nonebot2
+nb-cli
+nonebot-adapter-cqhttp
+nonebot-plugin-apscheduler
+nonebot-plugin-help
+pillow
+pymongo
+pandas
+aiohttp
+datetime

@@ -71,6 +71,54 @@ class Draw(object):
         elif direction == 1:
             self.x += deviation[0] + 2*border + interval
 
+    async def putTextCenter(
+        self,
+        text: 'str | tuple',
+        width: 'int',
+        direction: int = 0,
+        interval: int = 0,
+        font: 'str' = None,
+        fontsize: int = 16,
+        fill: 'tuple[int, int, int] | str' = (0, 0, 0),
+        border: int = 0,
+        borderFill: 'tuple[int, int, int] | str' = (0, 0, 0)
+    ) -> None:
+        """
+        说明：
+            在图像的画布上居中打印一行文字
+        参数：
+            :param text: 文字，若传入元组则类似print打印方案
+            :param width: 画布宽度
+            :param direction: 坐标移动方向 -1:不移动，0:向下
+            :param interval: 间隔，往direction方向的偏移量
+            :param font: 字体文件路径, 默认采用上次字体
+            :param fontsize: 字体大小
+            :param fill: 字体填充颜色
+            :param border: 边框大小
+            :param borderFill: 边框填充颜色
+        """
+        if font is not None:
+            await self.openfont(font, fontsize)
+        else:
+            await self.openfont(fontsize=fontsize)
+        if type(text) == type(()) or type(text) == type([]):
+            tmp, text = text, ''
+            for i in tmp:
+                text += str(i) + ' '
+        text = str(text)
+        deviation = self.draw.textsize(text, font=self.font, spacing=0)
+        self.x = (width - deviation[0]) / 2.0
+        await self.putText(
+            text,
+            direction,
+            interval,
+            font,
+            fontsize,
+            fill,
+            border,
+            borderFill
+        )
+
     async def openfont(self, path: str = None, fontsize: int = 16) -> None:
         if path is None:
             path = self.__font

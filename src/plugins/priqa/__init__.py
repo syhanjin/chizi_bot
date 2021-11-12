@@ -23,3 +23,5 @@ async def _priqa(bot: Bot, event: PrivateMessageEvent):
     # 去除消息中所有空格、回车以及标点
     text = text.replace(' ', '').replace('\n', '').translate(
         str.maketrans('', '', punctuation))
+    
+    
