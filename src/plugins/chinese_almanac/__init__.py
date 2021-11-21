@@ -19,7 +19,7 @@ card_path = os.path.join(root_path, 'card')
 if not os.path.exists(root_path):
     os.makedirs(root_path)
 if not os.path.exists(card_path):
-    os.makedirs(root_path)
+    os.makedirs(card_path)
 
 
 async def chinese_almanac(date: 'datetime | None' = None) -> dict:
