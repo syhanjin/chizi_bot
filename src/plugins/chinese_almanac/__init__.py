@@ -1,5 +1,6 @@
 import datetime
 import os
+from string import capwords
 import nonebot
 import aiohttp
 
@@ -14,7 +15,10 @@ from handles.text import *
 from handles.zhongguose import *
 
 root_path = os.path.join('.', 'res', 'chinese_almanac')
+card_path = os.path.join(root_path, 'card')
 if not os.path.exists(root_path):
+    os.makedirs(root_path)
+if not os.path.exists(card_path):
     os.makedirs(root_path)
 
 
@@ -119,8 +123,8 @@ async def make_almanac(date: 'datetime | None' = None) -> str:
     """
     date = date or datetime.datetime.now()
     out_path = os.path.join(
-        root_path, 'cards',
-        date.__format__('%Y-%m-%d %H:%M:%S')+'.jpg'
+        card_path,
+        date.__format__('%Y-%m-%d')+'.jpg'
     )
     data = (await chinese_almanac(date))
     bg = Draw.make_bg(1200, 1500)
@@ -188,6 +192,7 @@ ca = on_command(
     '今日黄历', aliases={'黄历'},
     priority=2
 )
+
 
 @ca.handle()
 async def _(bot: Bot, event: MessageEvent):
