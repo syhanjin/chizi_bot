@@ -5,6 +5,7 @@ import nonebot
 
 black = (0, 0, 0)
 
+
 class Draw(object):
     def __init__(self) -> None:
         self.x = 0
@@ -82,10 +83,11 @@ class Draw(object):
         fill: 'tuple[int, int, int] | str' = (0, 0, 0),
         border: int = 0,
         borderFill: 'tuple[int, int, int] | str' = (0, 0, 0)
-    ) -> None:
+    ):
         """
         说明：
             在图像的画布上居中打印一行文字
+            *以当前x为左边界
         参数：
             :param text: 文字，若传入元组则类似print打印方案
             :param width: 画布宽度
@@ -107,7 +109,8 @@ class Draw(object):
                 text += str(i) + ' '
         text = str(text)
         deviation = self.draw.textsize(text, font=self.font, spacing=0)
-        self.x = (width - deviation[0]) / 2.0
+        tmp = self.x
+        self.x += (width - deviation[0]) / 2.0
         await self.putText(
             text,
             direction,
@@ -118,6 +121,7 @@ class Draw(object):
             border,
             borderFill
         )
+        self.x = tmp
 
     async def openfont(self, path: str = None, fontsize: int = 16) -> None:
         if path is None:
@@ -136,6 +140,20 @@ class Draw(object):
     def pos(self, pos: 'tuple[int, int]') -> None:
         self.x = pos[0]
         self.y = pos[1]
+
+    @staticmethod
+    def make_bg(w: int, h: int) -> str:
+        """
+        构建空白背景图片
+        """
+        bgroot = os.path.join('.', 'res', 'bg', )
+        if not os.path.exists(bgroot):
+            os.makedirs(bgroot)
+        bgpath = os.path.join(bgroot, f'{w}x{h}.png')
+        if os.path.exists(bgpath):
+            return bgpath
+        Image.new('RGB', (w, h), (255, 255, 255)).save(bgpath)
+        return bgpath
 
 
 # 这个东西好像有点怪怪的，先关掉？
@@ -223,6 +241,7 @@ class TextDraw(Draw):
         img.save(path)
 '''
 
+
 class ImgDraw(Draw):
     """
     打开图片并生成一张与图片等大的画布
@@ -272,3 +291,8 @@ class ImgDraw(Draw):
     async def save(self, path: str) -> None:
         self.composite()
         self.img.save(path)
+
+
+FONT = os.path.join(
+    '.', 'res', 'fonts', 'LXGWWenKai-Regular.ttf'
+)

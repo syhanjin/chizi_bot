@@ -13,9 +13,9 @@ onEVENT = on_message(priority=1, permission=GROUP, block=False)
 
 
 # @run_preprocessor
-async def _(matcher: Matcher, bot: Bot, event: GroupMessageEvent, state: T_State):
-    if not isinstance(event, GroupMessageEvent):
+# async def _(matcher: Matcher, bot: Bot, event: GroupMessageEvent, state: T_State):
+#     if not isinstance(event, GroupMessageEvent):
         
-        pass
-    elif event.group_id == 457263503:
-        raise IgnoredException("此群已屏蔽")
+#         pass
+#     elif event.group_id == 457263503:
+#         raise IgnoredException("此群已屏蔽")
