@@ -13,12 +13,12 @@ from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent, Priva
 from nonebot.plugin import on_command, on_regex
 from nonebot.rule import to_me
 from nonebot.typing import T_State
-from handles import NAME, image
-from handles.image import ImgDraw
-from handles.message_builder import image
+from utils import NAME, image
+from utils.image import ImgDraw
+from utils.message_builder import image
 
-from handles.message_builder import face, text
-from handles.zhongguose import *
+from utils.message_builder import face, text
+from utils.zhongguose import *
 
 __usage__ = f'您可以使用任何正常状态下的文字请{NAME}算命'
 __help__version__ = '0.1.4'

@@ -1,12 +1,13 @@
 
 import datetime
+import os
 import re
 import random
 import numpy as np
 import pandas as pd
 
 from nonebot.adapters.cqhttp.event import GroupMessageEvent
-from handles.group import User
+from utils.group import User
 import json
 from nonebot import on_message
 from nonebot.adapters.cqhttp import Bot
@@ -55,10 +56,23 @@ async def _(bot: Bot, event: GroupMessageEvent):
     user = User(str(group_id), str(user_id))
     user.update_from_event(event)
     # 扩展处理
-    extend_list = [flood, cards, keyword_delete]
+    extend_list = [flood, cards, keyword_delete, data_collector]
     for i in extend_list:
         this = await i(bot, event, this, user) or this
     await this.save()
+
+async def data_collector(bot: Bot, event: GroupMessageEvent, this: Msg, user: User):
+    if not os.path.exists(f'data/{event.group_id}'):
+        os.makedirs(f'data/{event.group_id}')
+    msg = {
+        'time': event.time,
+        'user_id': event.user_id,
+        'raw_message': event.raw_message,
+        'sender': event.sender
+    }
+    with open(f'data/{event.group_id}/{event.time}', 'w') as f:
+        f.write(str(msg))
+    pass
 
 
 # 判定刷屏

@@ -22,7 +22,7 @@ app = nonebot.get_asgi()
 from nonebot import Bot
 @driver.on_bot_connect
 async def do_something(bot: Bot):
-    from handles import NAME, ONWER
+    from utils import NAME, ONWER
     await bot.send_private_msg(
         user_id=ONWER,
         message=f'{NAME} 已启动'

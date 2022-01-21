@@ -2,15 +2,15 @@
 import nonebot
 from nonebot.adapters.cqhttp.event import FriendRequestEvent, GroupRequestEvent
 from nonebot.permission import REQUEST
-from handles import group
+from utils import group
 import json
 from nonebot import on_request
 from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.message import MessageSegment as ms
 from nonebot.adapters.cqhttp.permission import GROUP
-from handles import NAME
+from utils import NAME
 
-from handles.message_builder import introduction
+from utils.message_builder import introduction
 
 friend_request = on_request(priority=1, block=True)
 group_request = on_request(priority=1,block=True)

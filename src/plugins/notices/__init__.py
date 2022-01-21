@@ -1,7 +1,7 @@
 
 import datetime
-from handles.message_builder import welcome_card
-from handles.group import User
+from utils.message_builder import welcome_card
+from utils.group import User
 import json
 import nonebot
 from nonebot import on_notice

@@ -3,7 +3,7 @@ import os
 from typing import Union
 import nonebot
 from nonebot.adapters.cqhttp.message import MessageSegment as ms
-from handles import NAME
+from utils import NAME
 
 '''
  "大家好，我是丙实。金牛座男一枚~[CQ:xml,data=<?xml version='1.0' encoding='UTF-8' ?><msg serviceID="104" templateID="1" brief="大家好，我是丙实。金牛座男一枚~"><item layout="2"><picture cover="" /><title>新人入群</title></item><source /></msg>,resid=104]"

@@ -10,9 +10,9 @@ from nonebot.adapters.cqhttp.permission import PRIVATE
 from nonebot.permission import SUPERUSER
 from nonebot.plugin import load_plugins, on_command, require
 from nonebot.typing import T_State
-from handles import ONWER
+from utils import ONWER
 
-from handles.message_builder import text
+from utils.message_builder import text
 
 scheduler = require("nonebot_plugin_apscheduler").scheduler
 restart = on_command(

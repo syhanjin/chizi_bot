@@ -1,7 +1,7 @@
 
 import re
 import pymongo
-from handles.private import User
+from utils.private import User
 
 from nonebot import on_command
 from nonebot.adapters.cqhttp.event import PrivateMessageEvent

@@ -8,11 +8,11 @@ from bs4 import BeautifulSoup
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.event import MessageEvent
 from nonebot.plugin import on_command
-from handles import HEADERS
-from handles.image import FONT, Draw, ImgDraw
-from handles.message_builder import image
-from handles.text import *
-from handles.zhongguose import *
+from utils import HEADERS
+from utils.image import FONT, Draw, ImgDraw
+from utils.message_builder import image
+from utils.text import *
+from utils.zhongguose import *
 
 root_path = os.path.join('.', 'res', 'chinese_almanac')
 card_path = os.path.join(root_path, 'card')
@@ -21,6 +21,9 @@ if not os.path.exists(root_path):
 if not os.path.exists(card_path):
     os.makedirs(card_path)
 
+__usage__ = f'发送 黄历 今日黄历 可获取当天黄历信息'
+__help__version__ = '0.1.1'
+__help__plugin_name__ = "黄历 | 今日黄历" 
 
 async def chinese_almanac(date: 'datetime | None' = None) -> dict:
     """

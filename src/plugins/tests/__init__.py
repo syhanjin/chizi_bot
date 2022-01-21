@@ -7,7 +7,7 @@ from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.typing import T_State
 from nonebot.adapters.cqhttp.permission import GROUP, PRIVATE
 from nonebot.adapters.cqhttp.message import MessageSegment as ms
-from handles.message_builder import introduction, welcome_card
+from utils.message_builder import introduction, welcome_card
 
 NAME = list(nonebot.get_driver().config.nickname)[0]
 t1 = on_command(
